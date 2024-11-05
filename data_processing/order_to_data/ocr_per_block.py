@@ -130,12 +130,11 @@ def line_to_block(result):
 
     return block_list
 
-def ocr_per_block():
+def ocr_per_block(img_folder):
     # load the OCR model
     ocr = PaddleOCR(lang = "korean")
 
     # find the path of all images in the folder
-    img_folder = "dataset"
     img_list = os.listdir(img_folder)
     
     for img in img_list:
@@ -154,4 +153,5 @@ def ocr_per_block():
             json.dump(ocr_result_in_block, f, ensure_ascii = False, indent = 4)
 
 if __name__ == "__main__":
-    ocr_per_block()
+    img_folder = "dataset/order_dataset/Musinsa"
+    ocr_per_block(img_folder)
