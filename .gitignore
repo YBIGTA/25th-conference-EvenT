@@ -1,3 +1,4 @@
 dataset/
 resultOCRinBlock/
 resultOCRinLine/
+model/Embedding/embedding_model.h5
