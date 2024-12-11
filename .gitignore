@@ -1,3 +1,9 @@
 dataset/
 resultOCRinBlock/
 resultOCRinLine/
+
+model/EmbeddingModel/*.h5
+model/EmbeddingModel/*.png
+model/EmbeddingModel/*.pth
+
+__pycache__/
