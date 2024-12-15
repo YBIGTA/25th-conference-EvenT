@@ -21,10 +21,6 @@ This dataset is categorized into four primary classes:
 
 Each class is annotated with attributes such as has '세부 카테고리'(sub-category), '컬러'(color), '디테일'(detail), '프린트'(print), '소재'(textile), '사이즈'(size), '기장'(clothing length), and '소매기장'(sleeve length). Additional attributes such as '넥라인'(neckline), and '칼라'(collar) information are included for relevant clothing types.
 
-### Preprocessing
-Since the dataset contained a large amount of information, we decided to simplify it. We only retained '세부 카테고리'(sub-category), '컬러'(color), '디테일'(detail), '프린트'(print), and '소매기장'(sleeve length) attributes, while also reducing the number of categories for clothing length. All other attributes were removed.
-Our objective was to use only the bounding boxes and detailed clothing attributes for training YOLO. To achieve this, we performed preprocessing converting the dataset into the format suitable for YOLO training.
-
 # Task2: Outfit Of The Day(OOTD) image embedding
 
 ## Detailed Information on Models
