@@ -91,7 +91,7 @@ for category in os.listdir(labelling_dir):
             print(f"Source file exists: {os.path.exists(src_image_path)}")
 
             if os.path.exists(src_image_path):
-                shutil.copy(src_image_path, dst_image_path)
+                shutil.move(src_image_path, dst_image_path)
 
             # 라벨 파일 생성
             label_path = os.path.join(output_dir, 'labels', label_filename)
@@ -152,7 +152,7 @@ def move_files(file_list, src_folder, dst_folder):
     for file in file_list:
         src_path = os.path.join(src_folder, file)
         dst_path = os.path.join(dst_folder, file)
-        shutil.copy(src_path, dst_path)
+        shutil.move(src_path, dst_path)
 
 # train 데이터 이동
 move_files(train_images, image_dir, os.path.join(split_dir, 'train', 'images'))
