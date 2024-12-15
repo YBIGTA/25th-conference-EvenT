@@ -44,9 +44,9 @@ import shutil
 from sklearn.model_selection import train_test_split
 
 # 경로 설정
-labelling_dir = 'C:/Projects/EvenT/origin_dataset/origin_labelling'  # JSON 라벨링 파일들이 있는 디렉토리
-origin_dir = 'C:/Projects/EvenT/origin_dataset/origin_image'        # 원본 이미지 파일들이 있는 디렉토리
-output_dir = 'C:/Projects/EvenT/final_dataset'  # output 디렉토리
+labelling_dir = '/dataset/original/labels'
+origin_dir = '/dataset/original/images'
+output_dir = '/dataset/after_processing'
 
 # 출력 디렉토리 생성
 os.makedirs(f"{output_dir}/images", exist_ok=True)
