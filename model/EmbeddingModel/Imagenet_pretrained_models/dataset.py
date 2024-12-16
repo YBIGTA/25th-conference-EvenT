@@ -31,7 +31,7 @@ class CustomImageDataset(Dataset):
         # Make image path
         filename = target_row['file']
         folder = self.label_to_folder[target_row['folder']]
-        img_path = f'/root/25th-conference-EvenT/dataset/Musinsa_dataset/{folder}/{filename}'
+        img_path = f'/root/25th-conference-EvenT/dataset/Musinsa_dataset_cropped/{folder}/{filename}'
         if not osp.exists(img_path):
             raise FileNotFoundError(f"Image file not found: {img_path}")
         

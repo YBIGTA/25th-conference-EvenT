@@ -13,7 +13,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-def split_trainval(num_train=800, num_val=200):
+def split_trainval(num_train=400, num_val=100):
     trainval_annos = pd.read_csv('/root/25th-conference-EvenT/model/EmbeddingModel/file_folder_map.csv')
 
     categories = sorted(trainval_annos['folder'].unique())

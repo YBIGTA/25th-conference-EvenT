@@ -9,9 +9,9 @@ class EmbeddingModel(nn.Module):
     def __init__(self):
         super(EmbeddingModel, self).__init__()
         embedding_dim = 128
-        self.resnet = models.resnext101_32x8d(pretrained=True)
+        backbone_model = models.resnext101_32x8d(pretrained=True)
         # Remove the last layer
-        self.backbone = nn.Sequential(OrderedDict([*(list(self.resnet.named_children())[:-2])]))
+        self.backbone = nn.Sequential(OrderedDict([*(list(backbone_model.named_children())[:-2])]))
 
         # # Freezing backbone
         # for param in self.backbone.parameters():
@@ -20,13 +20,16 @@ class EmbeddingModel(nn.Module):
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
 
         # Add a fully connected layer
-        self.embeddingLayer = nn.Linear(self.resnet.fc.in_features, embedding_dim)
+        self.embeddingLayer1 = nn.Linear(backbone_model.fc.in_features, 512)
+        self.embeddingLayer2 = nn.Linear(512, embedding_dim)
+
         self.classifier = nn.Linear(embedding_dim, 13)
 
     def forward(self, x):
         x = self.backbone(x)
         x = self.avgpool(x)
         x = torch.flatten(x, 1)
-        embedding = self.embeddingLayer(x)
+        embedding = self.embeddingLayer1(x)
+        embedding = self.embeddingLayer2(embedding)
         out = self.classifier(embedding)
         return embedding, out
