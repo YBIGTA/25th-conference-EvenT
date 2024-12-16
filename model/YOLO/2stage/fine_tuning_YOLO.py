@@ -5,7 +5,9 @@ from ultralytics import YOLO
 def train_yolo():
     model = YOLO("yolo11m.pt")
 
-    result_model = model.train(data="/dataset/after_processing/split_data/data.yaml", imgsz = 640, epochs = 100, device = [0, 1], workers = 12)
+    result_model = model.train(data="/dataset/after_processing/split_data/data.yaml", 
+                               save_period = 5, epochs = 50, workers = 8, batch = 32,
+                               imgsz = 640, device = [0, 1])
 
     result_model.save("yolo11m_fine_tuned.pt")
 
