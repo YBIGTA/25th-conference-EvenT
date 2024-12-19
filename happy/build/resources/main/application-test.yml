@@ -1,0 +1,3 @@
+spring:
+  kafka:
+    bootstrap-servers: mock:9092 # 실제 브로커 대신 mock 설정

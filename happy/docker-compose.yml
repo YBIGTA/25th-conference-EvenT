@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  app:
+    image: chungisaac/wuzu_de_project:latest # Docker Hub에 Push한 Spring Boot 이미지
+    container_name: spring-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      # MongoDB 설정
+      SPRING_DATA_MONGODB_URI: mongodb+srv://isaac815:32uIydv3OhFMtts2@isaac.2ql1u.mongodb.net/clothesDB?retryWrites=true&w=majority&appName=isaac
+
+      # AWS S3 설정
+
+      # 파일 업로드 크기 제한 설정
+      SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE: 10MB
+      SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE: 10MB
+
+      # 로깅 설정
+      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY: DEBUG
+
+    ports:
+      - "8080:8080" # 로컬 포트 8080을 컨테이너의 8080에 매핑
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: clothesDB
+      MONGO_INITDB_ROOT_USERNAME: isaac815
+      MONGO_INITDB_ROOT_PASSWORD: 32uIydv3OhFMtts2

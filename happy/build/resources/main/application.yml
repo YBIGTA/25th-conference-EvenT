@@ -1,0 +1,54 @@
+spring :
+  security:
+    enabled: false
+  data :
+    mongodb:
+      uri : mongodb+srv://isaac815:32uIydv3OhFMtts2@isaac.2ql1u.mongodb.net/clothesDB?retryWrites=true&w=majority&appName=isaac
+  servlet:
+    multipart:
+      max-file-size: 10MB    # 최대 파일 크기 설정
+      max-request-size: 10MB # 최대 요청 크기 설정
+  redis:
+    host: localhost
+    port: 6379
+  kafka:
+    bootstrap-servers: kafka:9092 # Kafka 컨테이너와 통신
+
+
+    consumer:
+      bootstrap-servers: kafka:9092
+      group-id: test-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    template:
+      default-topic: example-topic
+
+cloud:
+  aws:
+    s3:
+      bucket: even-t
+    stack:
+      auto: false
+    region:
+      static: ap-northeast-2
+    credentials:
+      access-key: ${AWS_ACCESS_KEY_ID}
+      secret-key: ${AWS_SECRET_ACCESS_KEY}
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+
+
+jwt:
+  secret: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
+#fastapi:
+#  url: http://localhost:8000  # FastAPI가 실행될 로컬 URL
+#  endpoints:
+#    api_endpoint: /api/fastapi  # FastAPI 엔드포인트
