@@ -1,3 +1,6 @@
 dataset/
 resultOCRinBlock/
 resultOCRinLine/
+docker-compose.yml
+.env
+src/main/resources/application.yml
