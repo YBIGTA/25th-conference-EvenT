@@ -7,6 +7,7 @@ import evenT.happy.dto.UserSignupDto;
 import evenT.happy.repository.UserRepository;
 import evenT.happy.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,13 +15,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
-    private final S3Service s3Service;
     private final UserRepository userRepository;
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
@@ -33,40 +34,51 @@ public class UserController {
        // return ResponseEntity.ok(Map.of("token", token));
     //}
   @PostMapping("/signup")
-  public ResponseEntity<String> signup(@RequestBody UserSignupDto UserSignupDto) {
-      // 회원가입 후 토큰 반환
-      String token = userService.SignUp(UserSignupDto);
-      return ResponseEntity.ok(token);
+  public ResponseEntity<Map<String, Object>> signup(@RequestBody UserSignupDto userSignupDto) {
+      String token = userService.SignUp(userSignupDto);
+
+      Map<String, Object> response = new HashMap<>();
+      response.put("status", HttpStatus.OK.value());
+      response.put("message", "회원가입 성공");
+      response.put("token", token);
+
+      return ResponseEntity.ok(response);
   }
 
+
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginDto loginDto) {
         String token = userService.login(loginDto);
-        return ResponseEntity.ok(token);
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", HttpStatus.OK.value());
+        response.put("message", "로그인 성공");
+        response.put("token", token);
+
+        return ResponseEntity.ok(response);
     }
 
 
-    @PostMapping("/{userId}/upload-pic")
-    public ResponseEntity<String> uploadUserPic(
-            @PathVariable("userId") String userId,
-            @RequestParam("file") MultipartFile file) {
-
-        try {
-            String key = "user_pic/" + userId + "/" + file.getOriginalFilename();  // S3 저장 경로
-            String fileUrl = s3Service.uploadFile(file, key);  // S3에 파일 업로드 후 URL 반환
-
-            // MongoDB에서 사용자 엔티티 업데이트
-            User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new RuntimeException("User not found"));
-            user.setUserPicUrl(fileUrl);
-            userRepository.save(user);
-
-            return ResponseEntity.ok("Image uploaded and URL saved: " + fileUrl);
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError()
-                    .body("Failed to upload image: " + e.getMessage());
-        }
-    }
+//    @PostMapping("/{userId}/upload-pic")
+//    public ResponseEntity<String> uploadUserPic(
+//            @PathVariable("userId") String userId,
+//            @RequestParam("file") MultipartFile file) {
+//
+//        try {
+//            String key = "user_pic/" + userId + "/" + file.getOriginalFilename();  // S3 저장 경로
+//            String fileUrl = s3Service.uploadFile(file, key);  // S3에 파일 업로드 후 URL 반환
+//
+//            // MongoDB에서 사용자 엔티티 업데이트
+//            User user = userRepository.findById(userId)
+//                    .orElseThrow(() -> new RuntimeException("User not found"));
+//            user.setUserPicUrl(fileUrl);
+//            userRepository.save(user);
+//
+//            return ResponseEntity.ok("Image uploaded and URL saved: " + fileUrl);
+//        } catch (Exception e) {
+//            return ResponseEntity.internalServerError()
+//                    .body("Failed to upload image: " + e.getMessage());
+//        }
+//    }
     @GetMapping("/{userId}/pic")
     public ResponseEntity<String> getUserPic(@PathVariable("userId")String userId) {
         return userRepository.findById(userId)

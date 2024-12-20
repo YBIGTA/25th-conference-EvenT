@@ -20,15 +20,15 @@ public class SecurityConfig {
     private final JwtRequestFilter jwtRequestFilter;
 
 
-    @Bean // 이 부분이 어떤 url 에서는 jwt 필요 없는지? 일단 무슨 코드 인지 봐야 할 듯
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable) // 최신 DSL 방식으로 CSRF 비활성화
+        http
+                .csrf(csrf -> csrf.disable()) // CSRF 비활성화
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/users/login","/users/signup").permitAll() // 로그인은 인증 없이 허용
-                        .anyRequest().authenticated() // 나머지는 인증 필요
+                        .anyRequest().permitAll() // 모든 요청 허용
                 )
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // JWT 필터 등록
-
+                .httpBasic(httpBasic -> httpBasic.disable()) // 기본 인증 비활성화
+                .formLogin(formLogin -> formLogin.disable()); // 폼 로그인 비활성화
         return http.build();
     }
 

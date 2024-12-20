@@ -17,14 +17,14 @@ public class User {
 
     @Id
     private String id;  // MongoDB 기본 ID
-    private String userName;
+    private String userId;
     private String password;
     private String gender;
-    private String nickName;  // Java 필드 이름은 CamelCase로 유지
+    private String name;
     private String userPicUrl;
     private int age;
     private String role;
-    private List<String> select3Style;
+    private List<String> select3Styles;
     private List<String> roles = List.of("ROLE_USER", "ROLE_ADMIN");
 
     private List<Double> Preference; // 벡터 데이터 (리스트로 저장)

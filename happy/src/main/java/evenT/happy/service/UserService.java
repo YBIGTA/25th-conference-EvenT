@@ -1,5 +1,7 @@
 package evenT.happy.service;
 import evenT.happy.config.JwtUtil;
+import evenT.happy.config.exception.LoginFailedException;
+import evenT.happy.config.exception.UserAlreadyExistsException;
 import evenT.happy.domain.User;
 import evenT.happy.dto.LoginDto;
 import evenT.happy.dto.UserSignupDto;
@@ -27,35 +29,34 @@ public class UserService {
     private final JwtUtil jwtUtil;
 
     public Optional<User> findByUserId(String userId){
-        return userRepository.findByUserName(userId);
+        return userRepository.findByUserId(userId);
     }
 
     public String SignUp(UserSignupDto userSignupDto){
-        if (userRepository.findByUserName(userSignupDto.getUserName()).isPresent()){
-            throw new RuntimeException("이미 있는 ID 입니다");
+        if (userRepository.findByUserId(userSignupDto.getUserId()).isPresent()){
+            throw new UserAlreadyExistsException("이미 있는 ID 입니다");
         }
-        if (userRepository.findByNickName(userSignupDto.getNickName()).isPresent()){
-            throw new RuntimeException("이미 있는 닉네임 입니다");
+        if (userRepository.findByName(userSignupDto.getUserId()).isPresent()){
+            throw new UserAlreadyExistsException("이미 있는 닉네임 입니다");
         }
         User user = new User();
         user.setRoles(List.of("ROLE_USER")); // 기본 권한
        // admin.setRoles(List.of("ROLE_USER", "ROLE_ADMIN")); // 관리자 권한 포함
 
-        user.setUserName(userSignupDto.getUserName());
+        user.setUserId(userSignupDto.getUserId());
         user.setPassword(passwordEncoder.encode(userSignupDto.getPassword())); // 비밀번호 해싱
         user.setGender(userSignupDto.getGender());
-        user.setNickName(userSignupDto.getNickName());
-        user.setUserPicUrl(userSignupDto.getUserPicUrl());
+        user.setName(userSignupDto.getName());
         user.setAge(userSignupDto.getAge());
-        user.setSelect3Style(userSignupDto.getSelect3Style());
+        user.setSelect3Styles(userSignupDto.getSelect3Styles());
         userRepository.save(user);
         // JWT 생성
-        String token = jwtUtil.generateToken(user.getUserName(), user.getRoles());
+        String token = jwtUtil.generateToken(user.getUserId(), user.getRoles());
 
 // SecurityContext에 인증 정보 저장
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(
-                        user.getUserName(), // principal: 사용자 식별자 (userName)
+                        user.getUserId(), // principal: 사용자 식별자 (userName)
                         null,               // credentials: 인증 이후 필요하지 않으므로 null
                         user.getRoles().stream() // 권한 정보 변환
                                 .map(SimpleGrantedAuthority::new) // String -> SimpleGrantedAuthority
@@ -72,21 +73,21 @@ public class UserService {
 
     public String login(LoginDto loginDto) {
         // 사용자 조회
-        User user = userRepository.findByUserName(loginDto.getUserName())
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        User user = userRepository.findByUserId(loginDto.getUserId())
+                .orElseThrow(() -> new LoginFailedException("사용자를 찾을 수 없습니다."));
 
         // 비밀번호 검증
         if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
-            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+            throw new LoginFailedException("비밀번호가 일치하지 않습니다.");
         }
 
         // JWT 생성
-        String token = jwtUtil.generateToken(user.getUserName(), user.getRoles());
+        String token = jwtUtil.generateToken(user.getUserId(), user.getRoles());
 
         // SecurityContext에 인증 정보 저장
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(
-                        user.getUserName(), // principal
+                        user.getUserId(), // principal
                         null, // credentials
                         user.getRoles().stream()
                                 .map(SimpleGrantedAuthority::new) // 권한 변환
