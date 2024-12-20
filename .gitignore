@@ -7,3 +7,6 @@ model/EmbeddingModel/*.png
 model/EmbeddingModel/*.pth
 
 __pycache__/
+.env
+docker-compose.yml
+application.yml
