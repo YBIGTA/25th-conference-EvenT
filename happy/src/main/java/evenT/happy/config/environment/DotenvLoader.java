@@ -12,5 +12,7 @@ public class DotenvLoader {
                 .load();
         System.setProperty("AWS_ACCESS_KEY", dotenv.get("AWS_ACCESS_KEY"));
         System.setProperty("AWS_SECRET_KEY", dotenv.get("AWS_SECRET_KEY"));
+//        System.setProperty("API_Key", dotenv.get("API_Key"));
+//        System.setProperty("INDEX_URL", dotenv.get("INDEX_URL"));
     }
 }

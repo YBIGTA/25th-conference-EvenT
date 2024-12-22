@@ -30,7 +30,7 @@ public class S3Service {
     public String uploadFile(File file, String userId) {
         // 파일 경로 생성
         String fileName = file.getName();
-        String filePath = "users/directdb/" + userId + "/" + fileName; // 경로 형식
+        String filePath = "users/directdb_pic/" + userId + "/" + fileName; // 경로 형식
 
         // S3에 파일 업로드
         s3Client.putObject(PutObjectRequest.builder()
@@ -45,7 +45,7 @@ public class S3Service {
 
     public void deleteFile(String userId, String fileName) {
         // 파일 경로 생성
-        String filePath = "users/directdb/" + userId + "/" + fileName;
+        String filePath = "users/directdb_pic/" + userId + "/" + fileName;
 
         // S3에서 파일 삭제
         s3Client.deleteObject(DeleteObjectRequest.builder()
@@ -69,7 +69,7 @@ public class S3Service {
         }
     }
     public List<String> listFiles(String userId) {
-        String prefix = "users/directdb/" + userId + "/";
+        String prefix = "users/directdb_pic/" + userId + "/";
         ListObjectsV2Request request = ListObjectsV2Request.builder()
                 .bucket(bucketName)
                 .prefix(prefix)

@@ -42,3 +42,12 @@ logging:
 
 fastapi:
   base-url: http://api-spring:8000
+  # 외부에 연결 할 때는 외부 ip 연결해야 함
+
+pinecone:
+  api-key: pcsk_5Tek8C_2jszqqXR4SYhrCTU7e4RFtR5e4wgZyHcu2bkL59BvJckh7BdticLezEq673MPCc
+#  ${API_Key}
+  api-url : https://event-u22vct8.svc.aped-4627-b74a.pinecone.io
+#  ${INDEX_URL}
+  environment : us-east-1
+  index-name : even-t

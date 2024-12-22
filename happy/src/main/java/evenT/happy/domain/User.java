@@ -26,8 +26,8 @@ public class User {
     private String role;
     private List<String> select3Styles;
     private List<String> roles = List.of("ROLE_USER", "ROLE_ADMIN");
+    private List<Double> preference; //벡터 데이터(리스트로 저장)
 
-    private List<Double> Preference; // 벡터 데이터 (리스트로 저장)
 
    // private List<Recommendation> RemainingRecommendations; // 남은 추천 데이터
 

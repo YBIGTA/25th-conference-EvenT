@@ -1,4 +1,4 @@
-package evenT.happy.dto.closetDto;
+package evenT.happy.domain.sampleclothes;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemAttributesDto {
+public class Attributes {
     private String color; // 색상
     private String print; // 프린트
     private String length; // 길이

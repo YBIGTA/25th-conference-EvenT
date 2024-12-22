@@ -4,3 +4,4 @@ resultOCRinLine/
 docker-compose.yml
 .env
 src/main/resources/application.yml
+build/libs/*

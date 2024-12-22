@@ -11,18 +11,19 @@ services:
       - DOTENV_PATH=/app
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
 
+# services: 찐 배포할 때는 이거 쓰면 됨
+ # app:
+  #  container_name: spring-app
+   # image: chungisaac/happy:latest
+    #environment:
+     # - DOTENV_PATH=/app
+      #- SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+
 
 
       # MongoDB 설정
-#      SPRING_DATA_MONGODB_URI: mongodb+srv://isaac815:32uIydv3OhFMtts2@isaac.2ql1u.mongodb.net/clothesDB?retryWrites=true&w=majority&appName=isaac
-
-
-      # 파일 업로드 크기 제한 설정
-      - SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE: 10MB
-      - SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE: 10MB
-
-      # 로깅 설정
-      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY: DEBUG
+      #      SPRING_DATA_MONGODB_URI: mongodb+srv://isaac815:32uIydv3OhFMtts2@isaac.2ql1u.mongodb.net/clothesDB?retryWrites=true&w=majority&appName=isaac
+      # AWS S3 설정
 
     ports:
       - "8080:8080" # 로컬 포트 8080을 컨테이너의 8080에 매핑

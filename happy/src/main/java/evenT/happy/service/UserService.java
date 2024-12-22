@@ -2,10 +2,13 @@ package evenT.happy.service;
 import evenT.happy.config.JwtUtil;
 import evenT.happy.config.exception.LoginFailedException;
 import evenT.happy.config.exception.UserAlreadyExistsException;
+import evenT.happy.service.que.RecommendedItem;
 import evenT.happy.domain.User;
 import evenT.happy.dto.LoginDto;
 import evenT.happy.dto.UserSignupDto;
 import evenT.happy.repository.UserRepository;
+import evenT.happy.service.pinecone.PineconeService;
+import evenT.happy.service.que.RecommendationQueue;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,9 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Queue;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,7 +31,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-
+    private final RecommendationQueue recommendationQueue;
     public Optional<User> findByUserId(String userId){
         return userRepository.findByUserId(userId);
     }
@@ -49,7 +53,14 @@ public class UserService {
         user.setName(userSignupDto.getName());
         user.setAge(userSignupDto.getAge());
         user.setSelect3Styles(userSignupDto.getSelect3Styles());
+        // Preference 벡터 생성 및 저장
+        List<Double> preferenceVector = calculatePreferenceVector(userSignupDto.getSelect3Styles());
+        user.setPreference(preferenceVector);
         userRepository.save(user);
+
+
+
+
         // JWT 생성
         String token = jwtUtil.generateToken(user.getUserId(), user.getRoles());
 
@@ -98,6 +109,12 @@ public class UserService {
         // JWT 반환
         return token;
     }
+    private List<Double> calculatePreferenceVector(List<String> select3Styles) {
+        // Pinecone용 벡터 값 생성 로직
+        return select3Styles.stream()
+                .map(style -> style.hashCode() % 1000 / 1000.0) // float -> double로 변경
+                .collect(Collectors.toList());
+    }
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -106,7 +123,44 @@ public class UserService {
     public Optional<User> getUserById(String id) {
         return userRepository.findById(id);
     }
+    public void addRecommendationForUser(String userId, RecommendedItem item) {
+        recommendationQueue.addRecommendation(userId, item);
+        System.out.println("Added recommendation for user " + userId + ": " + item);
+    }
 
+    public RecommendedItem consumeRecommendationForUser(String userId) {
+        RecommendedItem item = recommendationQueue.consumeRecommendation(userId);
+        if (item != null) {
+            System.out.println("Consumed recommendation for user " + userId + ": " + item);
+        } else {
+            System.out.println("No recommendations available for user " + userId);
+        }
+        return item;
+    }
+
+    public Queue<RecommendedItem> getRecommendationsForUser(String userId) {
+        return recommendationQueue.getRecommendations(userId);
+    }
+    public void updateUserPreference(String userId) {
+        Optional<User> optionalUser = userRepository.findByUserId(userId);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            // Preference 값 업데이트 (예: 0.1씩 더하기)
+            List<Double> preferences = user.getPreference();
+            for (int i = 0; i < preferences.size(); i++) {
+                preferences.set(i, preferences.get(i) + 0.1);
+            }
+
+            user.setPreference(preferences);
+            userRepository.save(user);
+
+            System.out.println("Updated preferences for userId " + userId + ": " + preferences);
+        } else {
+            System.out.println("User not found with userId: " + userId);
+        }
+    }
 
 //    public User updateUser(String id, User updatedUser) {
 //        return userRepository.findById(id)
