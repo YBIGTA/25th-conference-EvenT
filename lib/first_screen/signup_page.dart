@@ -3,7 +3,7 @@ import 'signup_db.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../../config/constants.dart';
-
+import '../../widgets/font.dart';
 
 // void main() {
 //   runApp(MyApp());
@@ -203,11 +203,7 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
         title: const Text(
           '회원가입',
-          style: TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
+          style: AppFonts.appBarStyle,
         ),
         elevation: 0.0,
       ),
@@ -228,10 +224,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   const Text(
                     'Q1. 기본 정보를 입력해주세요.',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: AppFonts.highlightStyle,
                   ),
                   const SizedBox(height: 20),
 
@@ -407,11 +400,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     child: const Text(
                       '입력 완료',
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900,
-                      ),
+                      style: AppFonts.loginStyle,
                     ),
                   ),
                 ],
@@ -443,10 +432,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       const Text(
                         'Q2. 좋아하는 스타일 3개를 선택해주세요.',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: AppFonts.highlightStyle,
                       ),
 
                       SizedBox(height: 20),
@@ -529,14 +515,10 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                         child: const Text(
                           '입력 완료',
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w900,
-                          ),
+                          style: AppFonts.loginStyle,
                         ),
                       ),
-
+                      const SizedBox(height: 20),
                       // 이건 서버 안열었을 때
                       ElevatedButton(
                         onPressed: () {
@@ -552,7 +534,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           fixedSize: const Size(180, 55),
                         ),
                         child: const Text(
-                          '입력 완료',
+                          '서버x버튼',
                           style: TextStyle(
                             fontSize: 15,
                             color: Colors.white,

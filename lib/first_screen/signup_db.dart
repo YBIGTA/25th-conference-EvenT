@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'tops_details.dart';
 import 'bottoms_details.dart';
+import '../../widgets/font.dart';
+
+//블록 사이 여백
+const btwblocks = SizedBox(height: 24);
+const btwtxt = SizedBox(height: 8);
+
 
 class SignupDBPage extends StatelessWidget {
   final String userId;
@@ -21,6 +27,14 @@ class SignupDBPage extends StatelessWidget {
     {'label': '스커트', 'imagePath': 'assets/images/skirts.png'}
   ];
 
+  // 아우터 블록 데이터
+  static const List<Map<String, String>> outersItems = [
+    {'label': '패딩', 'imagePath': 'assets/images/short_pants.png'},
+    {'label': '코트', 'imagePath': 'assets/images/long_pants.png'},
+    {'label': '기다건', 'imagePath': 'assets/images/skirts.png'},
+    {'label': '재킷', 'imagePath': 'assets/images/skirts.png'}
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,23 +52,17 @@ class SignupDBPage extends StatelessWidget {
             const Text(
               'Q3. 집에 무슨 옷이 있더라?',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-              ),
+              style: AppFonts.highlightStyle,
             ),
             const SizedBox(height: 16),
 
             // 상의 텍스트
             const Text(
               '상의',
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-              ),
+              style: AppFonts.bodyStyle,
               textAlign: TextAlign.left,
             ),
-            const SizedBox(height: 8),
+            btwtxt,
 
             // 상의 블록
             GridView.builder(
@@ -89,18 +97,15 @@ class SignupDBPage extends StatelessWidget {
                 );
               },
             ),
-            const SizedBox(height: 24),
+            btwblocks,
 
             // 하의 텍스트
             const Text(
               '하의',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: AppFonts.bodyStyle,
               textAlign: TextAlign.left,
             ),
-            const SizedBox(height: 8),
+            btwtxt,
 
             // 하의 블록
             GridView.builder(
@@ -134,6 +139,50 @@ class SignupDBPage extends StatelessWidget {
                   child: buildClothingBlock(item['label']!, item['imagePath']!),
                 );
               },
+            ),
+            btwblocks,
+
+            // 아우터 텍스트
+            const Text(
+              '아우터',
+              style: AppFonts.bodyStyle,
+              textAlign: TextAlign.left,
+            ),
+            btwtxt,
+
+            // 아우터 블록
+            GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+              padding: EdgeInsets.zero,
+              itemCount: outersItems.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                final item = outersItems[index];
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation1, animation2) =>
+                            BottomsDetailPage(
+                              label: item['label']!,
+                              imagePath: item['imagePath']!,
+                              userId: userId,
+                            ),
+                        transitionDuration: Duration.zero,
+                        reverseTransitionDuration: Duration.zero,
+                      ),
+                    );
+                  },
+                  child: buildClothingBlock(item['label']!, item['imagePath']!),
+                );
+              },
+
             ),
           ],
         ),

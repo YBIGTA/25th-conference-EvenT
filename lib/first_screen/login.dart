@@ -1,10 +1,15 @@
 import 'package:event_flutter/home_page.dart';
+import 'package:event_flutter/widgets/button.dart';
+import 'package:event_flutter/widgets/font.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../../main.dart';
 import '../../config/constants.dart';
+import '../../home_screen/style_page.dart';
 
+import '../../widgets/layout.dart';
+import '../../widgets/font.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -60,11 +65,7 @@ class LoginPage extends StatelessWidget {
         backgroundColor: Colors.white,
         title: const Text(
             '로그인',
-            style: TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            )
+            style: AppFonts.loginStyle,
         ),
         elevation: 0.0,
         centerTitle: true,
@@ -181,7 +182,7 @@ class LoginPage extends StatelessWidget {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => HomePage(), // 이동할 페이지 지정
+                        builder: (context) => CommonLayout(), // 이동할 페이지 지정
                       ),
                     );
                   } else {
@@ -193,13 +194,29 @@ class LoginPage extends StatelessWidget {
                     );
                   }
                 },
+                style: AppButtonStyles.loginButton(),
+                child: const Text(
+                  '로그인',
+                  style: AppFonts.loginStyle,
+                ),
+              ),
+              const SizedBox(height: 10.0),
+              // 서버 안열었을 때
+              ElevatedButton(
+                onPressed: () {
+                  // Navigator를 사용하여 signup_db 페이지로 이동
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CommonLayout()),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   elevation: 0,
                   backgroundColor: const Color(0xFFB8A39F),
-                  fixedSize: const Size(500, 50),
+                  fixedSize: const Size(180, 55),
                 ),
                 child: const Text(
-                  '로그인',
+                  '서버X버튼',
                   style: TextStyle(
                     fontSize: 15,
                     color: Colors.white,

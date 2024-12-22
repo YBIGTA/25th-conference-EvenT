@@ -316,7 +316,8 @@ class _BottomsDetailPageState extends State<BottomsDetailPage> {
                                         "length": "" // 길이 추가 필요 시 값 입력
                                       },
                                       "s3Url": widget.imagePath,
-                                      "quantity": 1
+                                      "quantity": 1,
+                                      "state" : 1
                                     }
                                   ]
                                 }
