@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -26,4 +27,5 @@ public class FastApiService {
                 .bodyToMono(String.class)
                 .block(); // FastAPI의 응답 받기
     }
+
 }

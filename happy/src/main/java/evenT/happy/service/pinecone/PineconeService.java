@@ -60,7 +60,6 @@ public class PineconeService {
                 .retrieve()
                 .bodyToMono(Void.class);
     }
-
     public Flux<CustomResult> findSimilarDocuments(String userId, List<Double> embedding, int maxResults, String namespace) {
         // Build the request body
         var body = Map.of(
@@ -116,8 +115,9 @@ public class PineconeService {
 
 
 
+
     }
-    public Flux<RecommendedItem> findAddSimilarDocuments(String userId, List<Double> embedding, int maxResults, String namespace) {
+    public Flux<RecommendedItem> findAddSimilarDocuments1(String userId, List<Double> embedding, int maxResults, String namespace) {
         // Build the request body
         var body = Map.of(
                 "vector", embedding,
@@ -159,6 +159,21 @@ public class PineconeService {
                     // Create RecommendedItem
                     return new RecommendedItem(userId, clothesId != null ? clothesId : 0, s3Url);
                 });
+    }
+    public Flux<QueryResponse.Match> findAddSimilarDocuments(String userId, List<Double> preference, int maxResults, String namespace) {
+        var body = Map.of(
+                "vector", preference,
+                "topK", maxResults,
+                "includeMetadata", true,
+                "namespace", namespace
+        );
+
+        return this.webClient.post()
+                .uri("/query")
+                .bodyValue(body)
+                .retrieve()
+                .bodyToMono(QueryResponse.class)
+                .flatMapMany(response -> Flux.fromIterable(response.getMatches()));
     }
 
 }

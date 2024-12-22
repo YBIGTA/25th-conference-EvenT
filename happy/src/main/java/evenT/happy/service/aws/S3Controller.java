@@ -4,6 +4,7 @@ import evenT.happy.config.exception.LoginFailedException;
 import evenT.happy.domain.User;
 import evenT.happy.repository.UserRepository;
 import evenT.happy.service.fastapi.FastApiService;
+import evenT.happy.service.fastapi.TestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -20,6 +22,8 @@ public class S3Controller {
     private final S3Service s3Service;
     private final UserRepository userRepository;
     private final FastApiService fastApiService;
+    private final TestService testService;
+
 
     // 파일 업로드
     @PostMapping("/upload/{userId}")
@@ -38,6 +42,7 @@ public class S3Controller {
 
         return "S3 URL: " + s3Url + ", FastAPI Response: " + fastApiResponse;
     }
+
     // 파일 삭제
     @DeleteMapping("/delete/{userId}/{fileName}")
     public String deleteFile(@PathVariable String userId, @PathVariable String fileName) {
@@ -65,5 +70,24 @@ public class S3Controller {
         }
         return convFile;
     }
+    @PostMapping("/upload/test/{userId}")
+    public String uploadTestFiles(
+            @PathVariable("userId") String userId,
+            @RequestParam("files") List<MultipartFile> multipartFiles) throws IOException {
 
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new LoginFailedException("사용자를 찾을 수 없습니다: " + userId));
+
+        List<String> s3Urls = new ArrayList<>();
+        for (MultipartFile multipartFile : multipartFiles) {
+            File file = testService.convertMultiPartToFile(multipartFile); // 파일 변환
+            String s3Url = testService.uploadFileToS3(file, userId); // S3 업로드 후 URL 반환
+            s3Urls.add(s3Url); // S3 URL 리스트에 추가
+        }
+
+        // FastAPI로 데이터 전송
+        String fastApiResponse = testService.sendDataToFastApi(userId, s3Urls);
+
+        return "S3 URLs: " + s3Urls + ", FastAPI Response: " + fastApiResponse;
+    }
 }

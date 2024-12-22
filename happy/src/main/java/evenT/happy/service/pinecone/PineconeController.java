@@ -85,13 +85,26 @@ public class PineconeController {
         return ResponseEntity.ok("User preference updated successfully.");
     }
     // 호출되면 뒤에 다가 데이터 추가
-    @PostMapping("/action/add")
-    public ResponseEntity<String> addRecommendation(@RequestBody UserRequest userRequest) {
+    @PostMapping("/action/add1")
+    public ResponseEntity<String> addRecommendation1(@RequestBody UserRequest userRequest) {
         // 추천 데이터를 큐에 추가
-        recommendationService.addRecommendationsToQueue(userRequest.getUserId())
+        recommendationService.addRecommendationsToQueue1(userRequest.getUserId())
                 .subscribe(); // 비동기 실행
 
         return ResponseEntity.ok("Recommendation process started successfully.");
+    }
+    @PostMapping("/action/add")
+    public ResponseEntity<List<CustomResult>> addRecommendation(@RequestBody UserRequest userRequest) {
+        // 추천 데이터를 생성하고 리스트로 반환
+        List<CustomResult> recommendations = recommendationService.addRecommendations(userRequest.getUserId())
+                .collectList() // Flux<CustomResult> -> Mono<List<CustomResult>>
+                .block(); // 블로킹 방식으로 리스트 생성 (주의: 비동기 성능 저하 가능)
+
+        if (recommendations == null || recommendations.isEmpty()) {
+            return ResponseEntity.noContent().build(); // 추천 데이터가 없을 경우 204 응답
+        }
+
+        return ResponseEntity.ok(recommendations); // JSON 리스트 반환
     }
 
 }

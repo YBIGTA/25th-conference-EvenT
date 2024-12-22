@@ -43,6 +43,7 @@ public class S3Service {
         return "https://" + bucketName + ".s3." + region + ".amazonaws.com/" + filePath;
     }
 
+
     public void deleteFile(String userId, String fileName) {
         // 파일 경로 생성
         String filePath = "users/directdb_pic/" + userId + "/" + fileName;
