@@ -21,7 +21,7 @@ public class FastApiService {
         requestData.put("s3Url", s3Url);
 
         return webClient.post()
-                .uri("/process") // FastAPI의 엔드포인트
+                .uri("/data") // FastAPI의 엔드포인트
                 .bodyValue(requestData)
                 .retrieve()
                 .bodyToMono(String.class)

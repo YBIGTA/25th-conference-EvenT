@@ -1,19 +1,20 @@
 package evenT.happy.service.aws;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import evenT.happy.config.exception.LoginFailedException;
 import evenT.happy.domain.User;
 import evenT.happy.repository.UserRepository;
 import evenT.happy.service.fastapi.FastApiService;
 import evenT.happy.service.fastapi.TestService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,7 +27,7 @@ public class S3Controller {
 
 
     // 파일 업로드
-    @PostMapping("/upload/{userId}")
+    @PostMapping("/upload1/{userId}")
     public String uploadFile(
             @PathVariable("userId") String userId,
             @RequestParam("file") MultipartFile multipartFile) throws IOException {
@@ -90,4 +91,45 @@ public class S3Controller {
 
         return "S3 URLs: " + s3Urls + ", FastAPI Response: " + fastApiResponse;
     }
+
+    @PostMapping("/upload/{userId}")
+    public ResponseEntity<Map<String, Object>> uploadFile1(
+            @PathVariable("userId") String userId,
+            @RequestParam("file") MultipartFile multipartFile) throws IOException {
+
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new LoginFailedException("사용자를 찾을 수 없습니다: " + userId));
+
+        File file = convertMultiPartToFile(multipartFile);
+        String s3Url = s3Service.uploadFile(file, userId);
+
+        // FastAPI로 데이터 전송 및 JSON 응답 받기
+        String fastApiResponse = fastApiService.sendDataToFastApi(userId, s3Url);
+
+        // FastAPI 응답을 JSON 객체로 변환
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> responseJson = objectMapper.readValue(fastApiResponse, Map.class);
+
+        // "closet" 내부의 모든 "items"의 status 값을 2로 설정
+        List<Map<String, Object>> closet = (List<Map<String, Object>>) responseJson.get("closet");
+        if (closet != null) {
+            for (Map<String, Object> category : closet) {
+                List<Map<String, Object>> subcategories = (List<Map<String, Object>>) category.get("subcategories");
+                if (subcategories != null) {
+                    for (Map<String, Object> subcategory : subcategories) {
+                        List<Map<String, Object>> items = (List<Map<String, Object>>) subcategory.get("items");
+                        if (items != null) {
+                            for (Map<String, Object> item : items) {
+                                item.put("status", 2); // status 값을 2로 고정
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // 최종 JSON 응답 반환
+        return ResponseEntity.ok(responseJson);
+    }
+
 }

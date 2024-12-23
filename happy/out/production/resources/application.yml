@@ -6,8 +6,8 @@ spring :
     multipart:
       enabled: true
       file-size-threshold: 2KB
-      max-file-size: 10MB    # 최대 파일 크기 설정
-      max-request-size: 10MB # 최대 요청 크기 설정
+      max-file-size: 100MB    # 최대 파일 크기 설정
+      max-request-size: 900MB # 최대 요청 크기 설정
   kafka:
     consumer:
       group-id: test-group
