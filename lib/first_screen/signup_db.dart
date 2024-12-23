@@ -38,8 +38,9 @@ class SignupDBPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         backgroundColor: Colors.white,
         elevation: 0, // 그림자 제거
       ),
@@ -49,10 +50,12 @@ class SignupDBPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 질문 텍스트
-            const Text(
-              'Q3. 집에 무슨 옷이 있더라?',
-              textAlign: TextAlign.center,
-              style: AppFonts.highlightStyle,
+            const Center( // 중앙 정렬
+              child: Text(
+                'Q3. 집에 무슨 옷이 있더라?',
+                textAlign: TextAlign.center,
+                style: AppFonts.highlightStyle,
+              ),
             ),
             const SizedBox(height: 16),
 
@@ -221,78 +224,3 @@ class SignupDBPage extends StatelessWidget {
     );
   }
 }
-
-
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Colors.white,
-//       appBar: AppBar(
-//         backgroundColor: Colors.white,
-//         elevation: 0, // 그림자 제거
-//       ),
-//       body: GridView.builder(
-//         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-//           crossAxisCount: 3, // 한 줄에 3개의 블록
-//           crossAxisSpacing: 10,
-//           mainAxisSpacing: 10,
-//         ),
-//         padding: const EdgeInsets.all(30),
-//         itemCount: topsItems.length,
-//         itemBuilder: (context, index) {
-//           final item = topsItems[index];
-//           return GestureDetector(
-//             onTap: () {
-//               // 상세 페이지로 이동하며 데이터 전달
-//               Navigator.push(
-//                 context,
-//                 PageRouteBuilder(
-//                   pageBuilder: (context, animation1, animation2) => TopsDetailPage(
-//                     label: item['label']!,
-//                     imagePath: item['imagePath']!,
-//                     userId: userId,
-//                   ),
-//                   transitionDuration: Duration.zero, // 모션 제거
-//                   reverseTransitionDuration: Duration.zero, // 모션 제거
-//                 ),
-//               );
-//             },
-//             child: buildClothingBlock(item['label']!, item['imagePath']!),
-//           );
-//         },
-//       ),
-//     );
-//   }
-//
-//   Widget buildClothingBlock(String label, String imagePath) {
-//     return Container(
-//       decoration: BoxDecoration(
-//         border: Border.all(color: Colors.grey, width: 0.7),
-//         borderRadius: BorderRadius.circular(15),
-//       ),
-//       child: Column(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           Expanded(
-//             child: Padding(
-//               padding: const EdgeInsets.all(8),
-//               child: Image.asset(
-//                 imagePath,
-//                 fit: BoxFit.contain,
-//               ),
-//             ),
-//           ),
-//           const SizedBox(height:5),
-//           Text(
-//             label,
-//             style: const TextStyle(
-//               fontSize: 15,
-//               fontWeight: FontWeight.bold,
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }

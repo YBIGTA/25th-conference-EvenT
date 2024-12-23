@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import '../../config/constants.dart';
 
 // 서버 URL
-final String apiUrl = createUrl('users/login');
+final String apiUrl = createUrl('simpledb/add');
 
 // 서버로 데이터 전송 함수
 Future<bool> sendDataToServer(Map<String, dynamic> data, String apiUrl) async {

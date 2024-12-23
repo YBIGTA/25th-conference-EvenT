@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../../config/constants.dart';
 
 /// 서버 요청 함수들
 Future<Map<String, dynamic>> fetchInitialCards(
@@ -10,9 +11,12 @@ Future<Map<String, dynamic>> fetchInitialCards(
     BuildContext context,
     ) async {
 
+  // URL
+  final String serverUrl_initial = createUrl('pinecone/search?userId=$userId');
+
   try {
     final response = await http.get(
-      Uri.parse('http://43.203.171.133:8080/pinecone/search?userId=user00'),
+      Uri.parse(serverUrl_initial),
     );
 
     if (response.statusCode == 200) {
@@ -37,17 +41,18 @@ Future<Map<String, dynamic>> fetchInitialCards(
 
           // 오른쪽 스와이프
           likeAction: () async {
+            final currentClothesId = await handleSwipeCallback();
             // POST 요청
-            await sendLikeAction(userId);
+            await sendLikeAction(userId, currentClothesId);
             // 스낵바
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                   content: Text("스타일을 좋아하셨습니다.❤️"), duration: Duration(milliseconds: 500),)// 0.5초
             );
             // 카드 남은 길이 계산 및 업데이트
-            handleSwipeCallback();
-            print("Card liked: $s3Url");
+            print("Card liked: $s3Url, clothesId: $currentClothesId");
           },
+
           nopeAction: () {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -56,17 +61,19 @@ Future<Map<String, dynamic>> fetchInitialCards(
             handleSwipeCallback(); // 왼쪽 스와이프 처리
             print("Card disliked: $s3Url");
           },
+
+
           // 위쪽 스와이프 : 저장
           superlikeAction:  () async {
             // final currentClothesId = clothesIds[0];
+            final currentClothesId = await handleSwipeCallback();
+            await sendSaveAction(userId, currentClothesId);
 
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                   content: Text("스타일을 저장하셨습니다!😙"), duration: Duration(milliseconds: 500),),
             );
-            final updatedClothesIds = await handleSwipeCallback();
-            final currentClothesId = updatedClothesIds[0];
-            await sendSaveAction(userId, currentClothesId);
+
             print("Card saved: $s3Url, clothesId: $currentClothesId");
           }
         );
@@ -91,10 +98,15 @@ Future<Map<String, dynamic>> fetchInitialCards(
 }
 
 // 좋아요 시 POST 요청
-Future<void> sendLikeAction(String userId) async {
-  final url = Uri.parse('http://43.203.171.133:8080/pinecone/action/like');
+Future<void> sendLikeAction(String userId, int clothesId) async {
+  print('------sendLikeAction------');
+
+  final String serverUrl_like = createUrl('pinecone/action/like');
+
+  final url = Uri.parse(serverUrl_like);
   final headers = {'Content-Type': 'application/json'};
-  final body = json.encode({'userId': 'isaac'});
+  final body = json.encode({'userId': userId, 'clothesId' : clothesId});
+  print("요청 바디 : $body");
 
   try {
     final response = await http.post(url, headers: headers, body: body);
@@ -111,9 +123,12 @@ Future<void> sendLikeAction(String userId) async {
 // 저장 시 POST 요청
 Future<void> sendSaveAction(String userId, int clothesId) async {
   print('------sendSaveAction------');
-  final url = Uri.parse('http://43.203.171.133:8080/pinecone/action/save');
+
+  final String serverUrl_save = createUrl('pinecone/action/save');
+
+  final url = Uri.parse(serverUrl_save);
   final headers = {'Content-Type': 'application/json'};
-  final body = json.encode({'userId': 'isaac', 'clothesId' : clothesId});
+  final body = json.encode({'userId': userId, 'clothesId' : clothesId});
   print("요청 바디 : $body");
 
   try {
@@ -193,13 +208,20 @@ class _SwipeCardViewState extends State<SwipeCardView> {
   }
 
   /// 스와이프 처리
-  Future<List<dynamic>> handleSwipe() async {
-    print("------handleSwipe(): ${swipeItems.length}------");
+  Future<int?> handleSwipe() async {
+    print(" ");
+    print("<<<<<<<<<<<handleSwipe(): ${swipeItems.length}>>>>>>>>>>");
+
+    int? firstClothesId;
+
     setState(() {
+
       if (swipeItems.isNotEmpty) {
         swipeItems.removeAt(0); // 첫 번째 카드 제거
       }
       if (clothesId.isNotEmpty) {
+        //첫번째값 저장
+        firstClothesId = clothesId[0];
         clothesId.removeAt(0); // clothesId 리스트에서 제거
       }
 
@@ -216,7 +238,7 @@ class _SwipeCardViewState extends State<SwipeCardView> {
       updateMatchEngine();
       // matchEngine?.currentItem = swipeItems.first;
     });
-    return clothesId;
+    return firstClothesId;
   }
 
   /// 추가 데이터 로드

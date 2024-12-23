@@ -24,9 +24,9 @@ class _CommonLayoutState extends State<CommonLayout> {
 
     // 페이지 리스트 초기화하면서 userId 전달
     _pages = [
-      Center(child: Text('등록 페이지')),
+      Center(child: Text('등록 페이지')), // userId 전달
       StylePage(userId: widget.userId), // userId 전달
-      SavePage(), // userId 전달
+      SavePage(userId: widget.userId), // userId 전달
       ClosetPage(), // userId 전달
     ];
 
@@ -59,7 +59,7 @@ class _CommonLayoutState extends State<CommonLayout> {
           "EvenT",
           style: const TextStyle(
             fontFamily: 'Prtendard',
-            color: Colors.black,
+            color: Color(0xFF70605E), // black or 0xFF70605E
             fontSize: 22,
             fontWeight: FontWeight.w600,
           ),
@@ -70,7 +70,7 @@ class _CommonLayoutState extends State<CommonLayout> {
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1.0),
         child: Container(
-          color: const Color(0xFFE4E4E4),
+          color: const Color(0xFFC4B8B6), // 0xFFC4B8B6 or 0xFFE4E4E4 ?
           height: 1.0,
         ),
       ),
