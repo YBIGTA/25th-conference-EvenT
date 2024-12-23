@@ -14,4 +14,6 @@ import java.util.List;
 public class ClothesRequestDto {
     private int clothesId; // 사용자 ID
     private List<CategoryDto> categories; // 카테고리 목록
+    private String fulls3url;
+    private List<Double> vector;
 }

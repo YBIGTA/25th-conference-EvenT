@@ -22,9 +22,15 @@ public class ClothesItem {
 
     private int clothesId;
     private List<Category> closet = new ArrayList<>(); // 카테고리 목록
-    public ClothesItem(int clothesId, List<Category> closet) {
+    private String fulls3url;
+    private List<Double> vector ;
+    public ClothesItem(int clothesId, List<Category> closet, String fulls3url, List<Double> vector) {
         this.clothesId = clothesId;
         this.closet = closet;
+        this.fulls3url = fulls3url;
+        this.vector = vector;
     }
 
+    public <E> ClothesItem(int clothesId, ArrayList<E> es) {
+    }
 }

@@ -23,10 +23,15 @@ public class ClosetItem {
 
     private String userId; // 사용자 ID
     private List<Category> closet = new ArrayList<>(); // 초기화
+    private String fulls3url;
+    private List<Double> vector;
+
+
 
     public ClosetItem(String userId, List<Category> closet) {
         this.userId = userId;
         this.closet = closet;
+        this.fulls3url = ""; // 기본값
+        this.vector = new ArrayList<>(); // 빈 리스트로 초기화
     }
-
 }

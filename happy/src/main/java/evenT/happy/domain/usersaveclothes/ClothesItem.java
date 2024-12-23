@@ -22,6 +22,9 @@ public class ClothesItem {
 
     private int clothesId;
     private List<Category> closet = new ArrayList<>(); // 카테고리 목록
+    private String fulls3url;
+    private List<Double> vector;
+
 
 
 }

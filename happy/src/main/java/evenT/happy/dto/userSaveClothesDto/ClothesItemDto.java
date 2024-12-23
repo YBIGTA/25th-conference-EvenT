@@ -12,5 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ClothesItemDto {
     private int clothesId;
+    private String fulls3url;
+    private List<Double> vector;
     private List<CategoryDto> closet = new ArrayList<>();
 }

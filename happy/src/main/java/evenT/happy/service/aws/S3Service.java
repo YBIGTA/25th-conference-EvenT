@@ -42,6 +42,21 @@ public class S3Service {
         // 업로드된 파일의 URL 반환
         return "https://" + bucketName + ".s3." + region + ".amazonaws.com/" + filePath;
     }
+    public String fulluploadFile(File file, String userId) {
+        // 파일 경로 생성
+        String fileName = file.getName();
+        String filePath = "users/directdb_pic/" + userId + "/" + fileName; // 경로 형식
+
+        // S3에 파일 업로드
+        s3Client.putObject(PutObjectRequest.builder()
+                        .bucket(bucketName)
+                        .key(filePath)
+                        .build(),
+                Path.of(file.getPath()));
+
+        // 업로드된 파일의 URL 반환
+        return "https://" + bucketName + ".s3." + region + ".amazonaws.com/" + filePath;
+    }
 
 
     public void deleteFile(String userId, String fileName) {

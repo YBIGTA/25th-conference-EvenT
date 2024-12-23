@@ -17,5 +17,5 @@ public class Item {
     private String s3Url; // 이미지 URL (AWS S3)
     private int quantity; // 수량
     private int status; // 상태 (기본, 맞춤형 등)
-    private List<Float> vector; // 옷 벡터 값
+    private List<Double> vector; // 옷 벡터 값
 }

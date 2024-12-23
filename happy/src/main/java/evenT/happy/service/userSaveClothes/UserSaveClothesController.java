@@ -21,6 +21,7 @@ public class UserSaveClothesController {
         String userId = (String) requestBody.get("userId");
         int clothesId = (int) requestBody.get("clothesId");
 
+
         // 서비스 호출
         userSaveClothesService.saveUserClothes(userId, clothesId);
 

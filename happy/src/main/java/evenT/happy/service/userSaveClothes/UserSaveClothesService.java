@@ -32,10 +32,17 @@ public class UserSaveClothesService {
         // clothesId로 ClothesItem 조회
         ClothesItem clothesItem = sampleClothesRepository.findByClothesId(clothesId)
                 .orElseThrow(() -> new IllegalArgumentException("ClothesItem not found for clothesId: " + clothesId));
+        String fulls3url = clothesItem.getFulls3url(); // ClothesItem에서 fulls3url 가져옴
+        List<Double> vector = List.of(0.1, 0.2, 0.3, 0.4); // 예시 벡터 값
 
         // 새 UserSaveClothes 객체 생성 및 저장
-        UserSaveClothes userSaveClothes = new UserSaveClothes(userId, List.of(clothesItem));
-
+// 새 UserSaveClothes 객체 생성 및 저장
+        UserSaveClothes userSaveClothes = new UserSaveClothes(
+                userId,
+                List.of(),
+                fulls3url,
+                vector
+        );
         // 저장 (중복 허용)
         userSaveClothesRepository.save(userSaveClothes);
 
@@ -46,6 +53,7 @@ public class UserSaveClothesService {
                     UserActionSaveComparison comparisonItem = new UserActionSaveComparison(
                             userId,
                             clothesId,
+                            clothesItem.getFulls3url(),
                             category.getCategoryName(),
                             subcategory.getName(),
                             item.getAttributes().getColor(),
@@ -109,19 +117,14 @@ public class UserSaveClothesService {
     public List<String> getUserS3Urls(String userId) {
         List<UserSaveClothes> userSaveClothesList = userSaveClothesRepository.findAllByUserId(userId);
 
-        List<String> s3Urls = new ArrayList<>();
+        // fulls3url 값 추출
+        List<String> fulls3urlList = new ArrayList<>();
         for (UserSaveClothes userSaveClothes : userSaveClothesList) {
-            for (ClothesItem clothesItem : userSaveClothes.getUserSaveCloset()) {
-                for (Category category : clothesItem.getCloset()) {
-                    for (Subcategory subcategory : category.getSubcategories()) {
-                        for (Item item : subcategory.getItems()) {
-                            s3Urls.add(item.getS3Url()); // s3Url 추출
-                        }
-                    }
-                }
+            if (userSaveClothes.getFulls3url() != null) { // null 체크
+                fulls3urlList.add(userSaveClothes.getFulls3url());
             }
         }
 
-        return s3Urls;
+        return fulls3urlList; // fulls3url 리스트 반환
     }
 }

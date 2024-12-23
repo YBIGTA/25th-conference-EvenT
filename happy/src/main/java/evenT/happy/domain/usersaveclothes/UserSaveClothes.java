@@ -16,14 +16,19 @@ public class UserSaveClothes {
 
 
     private String userId;
-    private List<evenT.happy.domain.sampleclothes.ClothesItem> userSaveCloset = new ArrayList<>();
+    private String fulls3url;
+    private List<Double> vector;
+    private List<ClothesItem> userSaveCloset = new ArrayList<>();
 
     public UserSaveClothes() {
     }
 
-    public UserSaveClothes(String userId, List<evenT.happy.domain.sampleclothes.ClothesItem> userSaveCloset) {
+    public UserSaveClothes(String userId, List<ClothesItem> userSaveCloset, String fulls3url, List<Double> vector) {
         this.userId = userId;
         this.userSaveCloset = userSaveCloset;
+        this.fulls3url = fulls3url;
+        this.vector = vector;
     }
+
 
 }

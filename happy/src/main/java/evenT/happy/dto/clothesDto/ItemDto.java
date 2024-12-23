@@ -18,5 +18,5 @@ public class ItemDto {
     private String s3Url; // 이미지 URL
     private int quantity; // 수량
     private int status; // 상태
-    private List<Float> vector;
+    private List<Double> vector;
 }

@@ -33,7 +33,11 @@ public class ClosetService {
         ClosetItem closetItem = closetRepository.findByUserId(requestDto.getUserId())
                 .orElse(new ClosetItem(requestDto.getUserId(), new ArrayList<>()));
 
-        // 각 카테고리별로 데이터 추가
+        // userId 레벨의 fulls3url과 vector 추가
+        closetItem.setFulls3url(requestDto.getFulls3url());
+        closetItem.setVector(requestDto.getVector());
+
+        // 이후 로직은 동일
         for (CategoryDto categoryDto : requestDto.getCategories()) {
             Optional<Category> existingCategory = closetItem.getCloset().stream()
                     .filter(category -> category.getCategoryName().equals(categoryDto.getCategoryName()))
@@ -42,12 +46,11 @@ public class ClosetService {
             Category category = existingCategory.orElseGet(() -> {
                 Category newCategory = new Category();
                 newCategory.setCategoryName(categoryDto.getCategoryName());
-                newCategory.setSubcategories(new ArrayList<>()); // 초기화
+                newCategory.setSubcategories(new ArrayList<>());
                 closetItem.getCloset().add(newCategory);
                 return newCategory;
             });
 
-            // 서브카테고리 병합
             for (SubcategoryDto subcategoryDto : categoryDto.getSubcategories()) {
                 Optional<Subcategory> existingSubcategory = category.getSubcategories().stream()
                         .filter(sub -> sub.getName().equals(subcategoryDto.getName()))
@@ -56,26 +59,22 @@ public class ClosetService {
                 Subcategory subcategory = existingSubcategory.orElseGet(() -> {
                     Subcategory newSubcategory = new Subcategory();
                     newSubcategory.setName(subcategoryDto.getName());
-                    newSubcategory.setItems(new ArrayList<>()); // 초기화
+                    newSubcategory.setItems(new ArrayList<>());
                     category.getSubcategories().add(newSubcategory);
                     return newSubcategory;
                 });
 
-                // items 병합
                 for (ItemDto itemDto : subcategoryDto.getItems()) {
                     Optional<Item> existingItem = subcategory.getItems().stream()
-                            .filter(item ->
-                                    item.getAttributes().equals(itemDto.getAttributes())
-                                            && item.getCustomName().equals(itemDto.getCustomName())
-                                            && item.getS3Url().equals(itemDto.getS3Url()))
+                            .filter(item -> item.getAttributes().equals(itemDto.getAttributes())
+                                    && item.getCustomName().equals(itemDto.getCustomName())
+                                    && item.getS3Url().equals(itemDto.getS3Url()))
                             .findFirst();
 
                     if (existingItem.isPresent()) {
-                        // 기존 item의 수량 업데이트
                         Item item = existingItem.get();
                         item.setQuantity(item.getQuantity() + itemDto.getQuantity());
                     } else {
-                        // 새 item 추가
                         Item newItem = new Item();
                         newItem.setAttributes(itemDto.getAttributes());
                         newItem.setCustomName(itemDto.getCustomName());
@@ -84,7 +83,7 @@ public class ClosetService {
                         newItem.setStatus(itemDto.getStatus());
                         subcategory.getItems().add(newItem);
                     }
-                    // UserClothesComparison 도큐먼트에 데이터 저장
+
                     UserClothesComparison comparisonItem = new UserClothesComparison(
                             requestDto.getUserId(),
                             categoryDto.getCategoryName(),
@@ -94,13 +93,11 @@ public class ClosetService {
                             itemDto.getS3Url()
                     );
 
-                    // MongoDB에 저장
                     userClothesComparisonRepository.save(comparisonItem);
                 }
             }
         }
 
-        // MongoDB 저장
         closetRepository.save(closetItem);
     }
     // 사용자 ID로 옷장 조회

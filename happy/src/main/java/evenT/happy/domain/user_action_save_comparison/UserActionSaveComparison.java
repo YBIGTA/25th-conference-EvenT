@@ -17,6 +17,7 @@ public class UserActionSaveComparison {
     @Id
     private String id;
     private String userId;
+    private String fulls3url;
     private int clothesId;
     private String categoryName;
     private String name;
@@ -25,9 +26,10 @@ public class UserActionSaveComparison {
     private String s3Url;
 
     // 생성자
-    public UserActionSaveComparison(String userId, int clothesId, String categoryName, String name, String color, String length, String s3Url) {
+    public UserActionSaveComparison(String userId, int clothesId,String fulls3url, String categoryName, String name, String color, String length, String s3Url) {
         this.userId = userId;
         this.clothesId = clothesId;
+        this.fulls3url = fulls3url;
         this.categoryName = categoryName;
         this.name = name;
         this.color = color;

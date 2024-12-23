@@ -15,5 +15,5 @@ public class ClothingVector {
     private int clothesId; // MongoDB에 저장된 고유 ID
     private String pineconeId; // Pinecone에 저장될 고유 ID
     private String userId; // 사용자 ID
-    private List<Float> vector; // 벡터 데이터 (float 리스트)
+    private List<Double> vector; // 벡터 데이터 (float 리스트)
 }
