@@ -1,0 +1,32 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:8.3.0"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.10"
+    }
+}
+
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+// 루트 프로젝트 빌드 디렉토리 설정
+rootProject.buildDir = "../build"
+
+subprojects {
+    // 각 모듈별 빌드 디렉토리 설정
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+    project.evaluationDependsOn(":app")
+}
+
+// Gradle 청소 작업 정의
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}

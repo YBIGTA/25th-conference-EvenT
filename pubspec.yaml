@@ -1,0 +1,32 @@
+name: test_proj
+description: "A new Flutter project."
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  image_picker: ^0.8.7+3
+  cupertino_icons: ^1.0.8
+  flutter_svg: ^1.1.6  # SVG 사용 시 유용
+  cached_network_image: ^3.2.3  # 이미지 캐싱
+  http: ^1.2.2  # 최신 버전으로 수정
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0  # 최신 권장 린트 설정
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/29cm.png
+    - assets/ably.png
+    - assets/musinsa.png
+    - assets/zigzag.png
