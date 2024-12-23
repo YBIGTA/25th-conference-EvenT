@@ -33,7 +33,7 @@ dependencies:
     sdk: flutter
   swipe_cards: ^2.0.0+1
   flutter_svg: ^1.1.6
-  aws_s3_plugin: ^latest_version
+  aws_signature_v4: ^0.3.0
 
 
   # The following adds the Cupertino Icons font to your application.

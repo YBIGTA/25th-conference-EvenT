@@ -1,10 +1,15 @@
+import 'package:event_flutter/home_screen/closet_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart'; // SVG 파일을 사용하기 위한 패키지
 import '../home_screen/style_page.dart';
 import '../home_screen/save_page.dart';
-
+import '../home_screen/closet_page.dart';
 
 class CommonLayout extends StatefulWidget {
+
+  final String userId; // 로그인된 userId 전달
+  CommonLayout({required this.userId});
+
   @override
   _CommonLayoutState createState() => _CommonLayoutState();
 }
@@ -12,13 +17,20 @@ class CommonLayout extends StatefulWidget {
 class _CommonLayoutState extends State<CommonLayout> {
   int _currentIndex = 1; // 현재 선택된 탭의 인덱스
 
-  final List<Widget> _pages = [
-    Center(child: Text('등록 페이지')), // 아직 구현 안 된 페이지
-    StylePage(), // 스타일 페이지
-    SavePage(), // 저장 페이지
-    Center(child: Text('옷장 페이지')), // 아직 구현 안 된 페이지
-  ];
+  late final List<Widget> _pages;
+  @override
+  void initState() {
+    super.initState();
 
+    // 페이지 리스트 초기화하면서 userId 전달
+    _pages = [
+      Center(child: Text('등록 페이지')),
+      StylePage(userId: widget.userId), // userId 전달
+      SavePage(), // userId 전달
+      ClosetPage(), // userId 전달
+    ];
+
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,8 +60,8 @@ class _CommonLayoutState extends State<CommonLayout> {
           style: const TextStyle(
             fontFamily: 'Prtendard',
             color: Colors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
+            fontSize: 22,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),

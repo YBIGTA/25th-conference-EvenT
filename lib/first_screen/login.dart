@@ -182,7 +182,7 @@ class LoginPage extends StatelessWidget {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => CommonLayout(), // 이동할 페이지 지정
+                        builder: (context) => CommonLayout(userId: userId), // 이동할 페이지 지정
                       ),
                     );
                   } else {
@@ -207,7 +207,7 @@ class LoginPage extends StatelessWidget {
                   // Navigator를 사용하여 signup_db 페이지로 이동
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => CommonLayout()),
+                    MaterialPageRoute(builder: (context) => CommonLayout(userId:'noID')),
                   );
                 },
                 style: ElevatedButton.styleFrom(
