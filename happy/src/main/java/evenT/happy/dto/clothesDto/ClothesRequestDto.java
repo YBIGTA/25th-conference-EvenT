@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClothesRequestDto {
+    private String userId;
     private int clothesId; // 사용자 ID
     private List<CategoryDto> categories; // 카테고리 목록
 }

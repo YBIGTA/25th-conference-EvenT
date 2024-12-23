@@ -4,8 +4,10 @@ import evenT.happy.domain.closet.Category;
 import evenT.happy.domain.closet.ClosetItem;
 import evenT.happy.domain.closet.Item;
 import evenT.happy.domain.closet.Subcategory;
+import evenT.happy.domain.userClothesComparsion.UserClothesComparison;
 import evenT.happy.dto.closetDto.*;
 import evenT.happy.repository.ClosetRepository;
+import evenT.happy.repository.UserClothesComparisonRepository;
 import evenT.happy.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 public class ClosetService {
     private final ClosetRepository closetRepository;
     private final UserRepository userRepository;
+    private final UserClothesComparisonRepository userClothesComparisonRepository;
 
     // SimpleDbDto를 ClosetItem으로 변환 후 저장
 
@@ -81,6 +84,18 @@ public class ClosetService {
                         newItem.setStatus(itemDto.getStatus());
                         subcategory.getItems().add(newItem);
                     }
+                    // UserClothesComparison 도큐먼트에 데이터 저장
+                    UserClothesComparison comparisonItem = new UserClothesComparison(
+                            requestDto.getUserId(),
+                            categoryDto.getCategoryName(),
+                            subcategoryDto.getName(),
+                            itemDto.getAttributes().getColor(),
+                            itemDto.getAttributes().getPrint(),
+                            itemDto.getS3Url()
+                    );
+
+                    // MongoDB에 저장
+                    userClothesComparisonRepository.save(comparisonItem);
                 }
             }
         }

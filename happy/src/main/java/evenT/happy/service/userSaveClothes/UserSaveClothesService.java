@@ -1,9 +1,15 @@
 package evenT.happy.service.userSaveClothes;
 
-import evenT.happy.domain.usersaveclothes.*;
+import evenT.happy.domain.user_action_save_comparison.UserActionSaveComparison;
+import evenT.happy.domain.sampleclothes.Category;
+import evenT.happy.domain.sampleclothes.Subcategory;
+import evenT.happy.domain.sampleclothes.Item;
+import evenT.happy.domain.usersaveclothes.UserSaveClothes;
 import evenT.happy.dto.userSaveClothesDto.*;
+import evenT.happy.domain.sampleclothes.ClothesItem;
 
 import evenT.happy.repository.SampleClothesRepository;
+import evenT.happy.repository.UserActionSaveComparisonRepository;
 import evenT.happy.repository.UserRepository;
 import evenT.happy.repository.UserSaveClothesRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +25,7 @@ public class UserSaveClothesService {
 
     private final UserSaveClothesRepository userSaveClothesRepository;
     private final SampleClothesRepository sampleClothesRepository;
-
+    private final UserActionSaveComparisonRepository userActionSaveComparisonRepository;
 
 
     public void saveUserClothes(String userId, int clothesId) {
@@ -37,6 +43,25 @@ public class UserSaveClothesService {
 
         if (!isAlreadyAdded) {
             userSaveClothes.getUserSaveCloset().add(clothesItem);
+        }
+        // user_action_save_comparison에 저장
+        for (Category category : clothesItem.getCloset()) {
+            for (Subcategory subcategory : category.getSubcategories()) {
+                for (Item item : subcategory.getItems()) {
+                    UserActionSaveComparison comparisonItem = new UserActionSaveComparison(
+                            userId,
+                            clothesId,
+                            category.getCategoryName(),
+                            subcategory.getName(),
+                            item.getAttributes().getColor(),
+                            item.getAttributes().getPrint(),
+                            item.getS3Url()
+                    );
+
+                    // 저장
+                    userActionSaveComparisonRepository.save(comparisonItem);
+                }
+            }
         }
 
         // 저장
