@@ -153,81 +153,81 @@
 // //           ),
 // //         ],
 // //       ),
-// //       child: Stack(
-// //         children: [
-// //           Positioned.fill(
-// //             child: ClipRRect(
-// //               borderRadius: BorderRadius.circular(25),
-// //               child: Image.network(imageUrl, fit: BoxFit.fill),
-// //             ),
-// //           ),
-// //
-// //           // 하단 그라데이션
-// //           Positioned(
-// //             bottom: 0,
-// //             child: Container(
-// //               height: 140,
-// //               width: 316,
-// //               decoration: const BoxDecoration(
-// //                 gradient: LinearGradient(
-// //                   begin: Alignment.bottomCenter,
-// //                   end: Alignment.topCenter,
-// //                   colors: [Colors.black, Colors.transparent],
-// //                 ),
-// //                 borderRadius: BorderRadius.only(
-// //                   bottomLeft: Radius.circular(25),
-// //                   bottomRight: Radius.circular(25),
-// //                 ),
-// //               ),
-// //             ),
-// //           ),
-// //
-// //           //하단 아이콘들
-// //           Positioned(
-// //             bottom: 20,
-// //             left: 20,
-// //             child: IconButton(
-// //               icon: Icon(Icons.clear, color: Colors.white, size: 30),
-// //               onPressed: () {
-// //                 ScaffoldMessenger.of(context).showSnackBar(
-// //                   const SnackBar(content: Text("스타일을 싫어하셨습니다.💔")),
-// //                 );
-// //               },
-// //             ),
-// //           ),
-// //           Positioned(
-// //             bottom: 20,
-// //             right: 20,
-// //             child: IconButton(
-// //               icon: Icon(Icons.check, color: Colors.white, size: 30),
-// //               onPressed: () {
-// //                 ScaffoldMessenger.of(context).showSnackBar(
-// //                   const SnackBar(content: Text("스타일을 좋아하셨습니다.❤️")),
-// //                 );
-// //               },
-// //             ),
-// //           ),
-// //           Positioned(
-// //             bottom: 20,
-// //             left: 0,
-// //             right: 0,
-// //             child: Center(
-// //               child: IconButton(
-// //                 icon: Icon(Icons.favorite, color: Colors.white, size: 30),
-// //                 onPressed: () {
-// //                   ScaffoldMessenger.of(context).showSnackBar(
-// //                     const SnackBar(content: Text("스타일을 저장하셨습니다!😙")),
-// //                   );
-// //                 },
-// //               ),
-// //             ),
-// //           ),
-// //         ],
-// //       ),
-// //     );
-// //   }
-// // }
+//       child: Stack(
+//         children: [
+//           Positioned.fill(
+//             child: ClipRRect(
+//               borderRadius: BorderRadius.circular(25),
+//               child: Image.network(imageUrl, fit: BoxFit.fill),
+//             ),
+//           ),
 //
+//           // 하단 그라데이션
+//           Positioned(
+//             bottom: 0,
+//             child: Container(
+//               height: 140,
+//               width: 316,
+//               decoration: const BoxDecoration(
+//                 gradient: LinearGradient(
+//                   begin: Alignment.bottomCenter,
+//                   end: Alignment.topCenter,
+//                   colors: [Colors.black, Colors.transparent],
+//                 ),
+//                 borderRadius: BorderRadius.only(
+//                   bottomLeft: Radius.circular(25),
+//                   bottomRight: Radius.circular(25),
+//                 ),
+//               ),
+//             ),
+//           ),
+//
+//           //하단 아이콘들
+//           Positioned(
+//             bottom: 20,
+//             left: 20,
+//             child: IconButton(
+//               icon: Icon(Icons.clear, color: Colors.white, size: 30),
+//               onPressed: () {
+//                 ScaffoldMessenger.of(context).showSnackBar(
+//                   const SnackBar(content: Text("스타일을 싫어하셨습니다.💔")),
+//                 );
+//               },
+//             ),
+//           ),
+//           Positioned(
+//             bottom: 20,
+//             right: 20,
+//             child: IconButton(
+//               icon: Icon(Icons.check, color: Colors.white, size: 30),
+//               onPressed: () {
+//                 ScaffoldMessenger.of(context).showSnackBar(
+//                   const SnackBar(content: Text("스타일을 좋아하셨습니다.❤️")),
+//                 );
+//               },
+//             ),
+//           ),
+//           Positioned(
+//             bottom: 20,
+//             left: 0,
+//             right: 0,
+//             child: Center(
+//               child: IconButton(
+//                 icon: Icon(Icons.favorite, color: Colors.white, size: 30),
+//                 onPressed: () {
+//                   ScaffoldMessenger.of(context).showSnackBar(
+//                     const SnackBar(content: Text("스타일을 저장하셨습니다!😙")),
+//                   );
+//                 },
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
 //
 // // Future<void> requestMoreCards(String userId) async {
 // //   try {
@@ -244,326 +244,58 @@
 // //     print("Error: $e");
 // //   }
 // // }
-//
-//
-// import 'package:flutter/material.dart';
-// import 'package:swipe_cards/swipe_cards.dart';
-// import 'package:http/http.dart' as http;
-// import 'dart:convert';
-//
-// /// 서버 요청 함수들
-// Future<List<SwipeItem>> fetchInitialCards(String userId, BuildContext context) async {
-//   try {
-//     final response = await http.get(
-//       Uri.parse('http://43.203.171.133:8080/pinecone/search?userId=user00'),
-//     );
-//     // 요청 바디
-//     print("Response Body: ${response.body}");
-//     if (response.statusCode == 200) {
-//       final List<dynamic> data = json.decode(response.body);
-//       // 요청 데이터
-//       print("Data : $data");
-//
-//       // SwipeItem 리스트 생성
-//       final cards = data
-//           .map<String>((item) => item['item']['s3Url'])
-//           .toList();
-//
-//       print("SwipeItems: $cards");
-//
-//       return cards;
-//
-//     } else {
-//       throw Exception("Failed to load cards");
-//     }
-//   } catch (e) {
-//     print("Error: $e");
-//     return [];
-//   }
-// }
-//
-// /// 페이지 및 UI 코드
-// class StylePage extends StatelessWidget {
-//   final String userId;
-//   StylePage({required this.userId});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return SwipeCardView(userId: userId);
-//   }
-// }
-//
-// class SwipeCardView extends StatefulWidget {
-//   final String userId;
-//   SwipeCardView({required this.userId});
-//
-//   @override
-//   _SwipeCardViewState createState() => _SwipeCardViewState();
-// }
-//
-// class _SwipeCardViewState extends State<SwipeCardView> {
-//   List<String> s3Urls = []; // s3Url 저장 리스트
-//   List<SwipeItem> swipeItems = [];
-//   MatchEngine? matchEngine;
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     loadInitialCards();
-//   }
-//
-//   void loadInitialCards() async {
-//     final fetchedItems = await fetchInitialCards(widget.userId, context);
-//
-//     setState(() {
-//       // 추가된 s3Urls 디버깅
-//       print("Fetched SwipeItems: ${fetchedItems.map((item) => item.content).toList()}");
-//
-//       s3Urls.addAll(fetchedItems.map((item) => item.content));
-//       print("Updated s3Urls after addAll: $s3Urls");
-//
-//       updateSwipeItems();
-//     });
-//   }
-//   void showSnackBar(String message) {
-//     ScaffoldMessenger.of(context).showSnackBar(
-//       SnackBar(content: Text(message)),
-//     );
-//   }
-//   void updateSwipeItems() {
-//     if (s3Urls.isEmpty) {
-//       print("No URLs available to update SwipeItems!");
-//       return;
-//     }
-//
-//     setState(() {
-//       swipeItems = s3Urls.map((url) {
-//         return SwipeItem(
-//           content: url,
-//           likeAction: () {
-//             showSnackBar("스타일을 좋아하셨습니다.❤️");
-//             handleSwipe();
-//           },
-//           nopeAction: () {
-//             showSnackBar("스타일을 싫어하셨습니다.💔");
-//             handleSwipe();
-//           },
-//           superlikeAction: () {
-//             showSnackBar("스타일을 저장하셨습니다!😙");
-//             handleSwipe();
-//           },
-//         );
-//       }).toList();
-//
-//       // `MatchEngine`이 null이거나 swipeItems가 없을 경우 재생성
-//       if (matchEngine == null || swipeItems.isEmpty) {
-//         matchEngine = MatchEngine(swipeItems: swipeItems);
-//       } else {
-//         // 이미 초기화된 경우 matchEngine에 새 SwipeItems를 연결
-//         matchEngine!.swipeItems = swipeItems;
-//       }
-//
-//       print("SwipeItems updated: ${swipeItems.length}");
-//       print("MatchEngine initialized: ${matchEngine != null}");
-//     });
-//   }
-//
-//   void handleSwipe() {
-//     if (s3Urls.isEmpty) {
-//       print("No more URLs to swipe!");
-//       return;
-//     }
-//
-//     setState(() {
-//       // 가장 앞의 URL 제거
-//       s3Urls.removeAt(0);
-//       print("Updated s3Urls after removal: $s3Urls");
-//
-//       // 카드 부족 시 새 데이터 로드
-//       if (s3Urls.length <= 2) {
-//         print("카드 부족! Fetching more...");
-//         loadInitialCards();
-//         updateSwipeItems(); // 새 데이터 반영
-//       }
-//     });
-//
-//     // SwipeItems 업데이트
-//     updateSwipeItems();
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Stack(
-//         children: [
-//           if (matchEngine != null && swipeItems.isNotEmpty) // matchEngine과 swipeItems가 유효한지 확인
-//             Align(
-//               alignment: Alignment.topCenter,
-//               child: Padding(
-//                 padding: const EdgeInsets.only(top: 50),
-//                 child: SwipeCards(
-//                   matchEngine: matchEngine!,
-//                   itemBuilder: (BuildContext context, int index) {
-//                     return _buildCard(swipeItems[index].content);
-//                   },
-//                   onStackFinished: () {
-//                     showSnackBar("No more cards!");
-//                   },
-//                   upSwipeAllowed: true,
-//                   fillSpace: false,
-//                 ),
-//               ),
-//             ),
-//           if (matchEngine == null || swipeItems.isEmpty) // 로딩 상태를 표시
-//             Center(
-//               child: CircularProgressIndicator(),
-//             ),
-//         ],
-//       ),
-//     );
-//   }
-//
-//   Widget _buildCard(String imageUrl) {
-//     return Container(
-//       width: 316,
-//       height: 551,
-//       decoration: BoxDecoration(
-//         borderRadius: BorderRadius.circular(25),
-//         color: Colors.white,
-//         boxShadow: [
-//           BoxShadow(
-//             color: Colors.black.withOpacity(0.1),
-//             blurRadius: 22,
-//             offset: const Offset(0, 17),
-//           ),
-//         ],
-//       ),
-//       child: ClipRRect(
-//         borderRadius: BorderRadius.circular(25),
-//         child: Image.network(imageUrl, fit: BoxFit.cover),
-//       ),
-//     );
-//   }
-//
-//
-//
-//
-//   // void loadInitialCards() async {
-//   //   final cards = await fetchInitialCards(widget.userId, context);
-//   //   setState(() {
-//   //     swipeItems = cards.map((item) {
-//   //       return SwipeItem(
-//   //         content: item.content,
-//   //         likeAction: () {
-//   //           showSnackBar("스타일을 좋아하셨습니다.❤️");
-//   //           removeCardAndCheck();
-//   //         },
-//   //         nopeAction: () {
-//   //           showSnackBar("스타일을 싫어하셨습니다.💔");
-//   //           removeCardAndCheck();
-//   //         },
-//   //         superlikeAction: () {
-//   //           showSnackBar("스타일을 저장하셨습니다!😙");
-//   //           removeCardAndCheck();
-//   //         },
-//   //       );
-//   //     }).toList();
-//   //
-//   //     matchEngine = MatchEngine(swipeItems: swipeItems);
-//   //   });
-//   }
-//
-//   // /// 추가 카드를 요청하는 함수
-//   // void loadMoreCards() async {
-//   //   await requestMoreCards(widget.userId);
-//   //   loadInitialCards(); // 새로운 카드 데이터를 로드
-//   // }
-//   //
-//   // /// 남은 카드 수 확인 및 추가 카드 요청
-//   // void removeCardAndCheck() {
-//   //   setState(() {
-//   //     swipeItems.removeAt(0); // 가장 앞의 카드 제거
-//   //   });
-//   //   if (swipeItems.length <= 3) {
-//   //     loadMoreCards(); // 카드가 3개 이하이면 추가 요청
-//   //   }
-//   // }
-//   //
-//   // void showSnackBar(String message) {
-//   //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
-//   // }
-//
-//   // @override
-//   // Widget build(BuildContext context) {
-//   //   return Stack(
-//   //     children: [
-//   //       if (matchEngine != null)
-//   //         Align(
-//   //           alignment: Alignment.topCenter,
-//   //           child: Padding(
-//   //             padding: const EdgeInsets.only(top: 50),
-//   //             child: SwipeCards(
-//   //               matchEngine: matchEngine!,
-//   //               itemBuilder: (BuildContext context, int index) {
-//   //                 return _buildCard(swipeItems[index].content);
-//   //               },
-//   //               onStackFinished: () {
-//   //                 ScaffoldMessenger.of(context).showSnackBar(
-//   //                   SnackBar(content: Text("No more cards!")),
-//   //                 );
-//   //               },
-//   //               upSwipeAllowed: true,
-//   //               fillSpace: false,
-//   //             ),
-//   //           ),
-//   //         ),
-//   //     ],
-//   //   );
-//   // }
-//   //
-//   // Widget _buildCard(String imageUrl) {
-//   //   return Container(
-//   //     width: 316,
-//   //     height: 551,
-//   //     decoration: BoxDecoration(
-//   //       borderRadius: BorderRadius.circular(25),
-//   //       color: Colors.white,
-//   //       boxShadow: [
-//   //         BoxShadow(
-//   //           color: Colors.black.withOpacity(0.1),
-//   //           blurRadius: 22,
-//   //           offset: const Offset(0, 17),
-//   //         ),
-//   //       ],
-//   //     ),
-//   //     child: ClipRRect(
-//   //       borderRadius: BorderRadius.circular(25),
-//   //       child: Image.network(imageUrl, fit: BoxFit.cover),
-//   //     ),
-//   //   );
-//   // }
 import 'package:flutter/material.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 /// 서버 요청 함수들
-Future<List<SwipeItem>> fetchInitialCards(String userId) async {
+Future<List<SwipeItem>> fetchInitialCards(String userId, Function handleSwipeCallback, BuildContext context) async {
   try {
     final response = await http.get(
       Uri.parse('http://43.203.171.133:8080/pinecone/search?userId=user00'),
     );
 
     if (response.statusCode == 200) {
+      print("fetchInitialCards()");
       final List<dynamic> data = json.decode(response.body);
+      print("data: $data");
+
+
 
       // SwipeItem 리스트 생성
-      return data.map((item) {
-        final s3Url = item['item']['s3Url'] ?? 'https://via.placeholder.com/391x579';
+      final items = data.map((item) {
+        final s3Url = item['item']['s3Url'];
         return SwipeItem(
           content: s3Url,
+          likeAction: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                  content: Text("스타일을 좋아하셨습니다.❤️"), duration: Duration(milliseconds: 500),)// 0.5초
+            );
+            handleSwipeCallback(); // 오른쪽 스와이프 처리
+            print("Card liked: $s3Url");
+          },
+          nopeAction: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                  content: Text("스타일을 싫어하셨습니다.💔️"), duration: Duration(milliseconds: 500),),
+            );
+            handleSwipeCallback(); // 왼쪽 스와이프 처리
+            print("Card disliked: $s3Url");
+          },
+          superlikeAction:  () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                  content: Text("스타일을 저장하셨습니다!😙"), duration: Duration(milliseconds: 500),),
+            );
+            handleSwipeCallback();
+            print("Card saved: $s3Url");
+          }
         );
       }).toList();
+      print("리턴: $items");
+      return items;
     } else {
       throw Exception("Failed to load cards");
     }
@@ -585,6 +317,7 @@ class StylePage extends StatelessWidget {
 }
 
 class SwipeCardView extends StatefulWidget {
+
   final String userId;
   SwipeCardView({required this.userId});
 
@@ -604,12 +337,14 @@ class _SwipeCardViewState extends State<SwipeCardView> {
 
   /// 서버에서 초기 데이터 로드
   void loadInitialCards() async {
-    final fetchedItems = await fetchInitialCards(widget.userId);
+    final fetchedItems = await fetchInitialCards(widget.userId, handleSwipe, context);
+    print("loadInitialCards()");
 
     setState(() {
       swipeItems.addAll(fetchedItems); // 가져온 데이터 추가
       updateMatchEngine(); // MatchEngine 업데이트
     });
+    print("loadInitialCards() 후 : ${swipeItems.length}개");
   }
 
   /// MatchEngine 업데이트
@@ -620,13 +355,16 @@ class _SwipeCardViewState extends State<SwipeCardView> {
     }
 
     setState(() {
-      matchEngine = MatchEngine(swipeItems: swipeItems);
+      matchEngine = MatchEngine(swipeItems: List.from(swipeItems));
+      print("UpdateMatchEngine : Current Item: ${matchEngine?.currentItem?.content}");
+      print("UpdateMatchEngine : Swipe Items: $swipeItems");
       print("MatchEngine updated with ${swipeItems.length} items.");
     });
   }
 
   /// 스와이프 처리
   void handleSwipe() async {
+    print("handleSwipe(): ${swipeItems.length}");
     setState(() {
       if (swipeItems.isNotEmpty) {
         swipeItems.removeAt(0); // 첫 번째 카드 제거
@@ -639,12 +377,19 @@ class _SwipeCardViewState extends State<SwipeCardView> {
         print("카드 부족! Fetching more...");
         fetchAndAddMoreCards(); // 추가 데이터 로드
       }
+
+      // MatchEngine 업데이트
+      updateMatchEngine();
+      // matchEngine?.currentItem = swipeItems.first;
+
+
     });
   }
 
   /// 추가 데이터 로드
   void fetchAndAddMoreCards() async {
-    final moreCards = await fetchInitialCards(widget.userId);
+    print("fetchAndAddMoreCards()");
+    final moreCards = await fetchInitialCards(widget.userId, handleSwipe, context);
 
     setState(() {
       swipeItems.addAll(moreCards); // 새 카드 추가
@@ -654,6 +399,7 @@ class _SwipeCardViewState extends State<SwipeCardView> {
 
   @override
   Widget build(BuildContext context) {
+    print("Building UI with ${swipeItems.length} swipe items.");
     return Scaffold(
       body: Stack(
         children: [
@@ -663,6 +409,7 @@ class _SwipeCardViewState extends State<SwipeCardView> {
               child: Padding(
                 padding: const EdgeInsets.only(top: 50),
                 child: SwipeCards(
+                  key: UniqueKey(),
                   matchEngine: matchEngine!,
                   itemBuilder: (BuildContext context, int index) {
                     return _buildCard(swipeItems[index].content);
@@ -702,9 +449,76 @@ class _SwipeCardViewState extends State<SwipeCardView> {
           ),
         ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(25),
-        child: Image.network(imageUrl, fit: BoxFit.cover),
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(25),
+              child: Image.network(imageUrl, fit: BoxFit.cover),
+            ),
+          ),
+
+          // 하단 그라데이션
+          Positioned(
+            bottom: 0,
+            child: Container(
+              height: 140,
+              width: 316,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [Colors.black, Colors.transparent],
+                ),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(25),
+                  bottomRight: Radius.circular(25),
+                ),
+              ),
+            ),
+          ),
+
+          //하단 아이콘들
+          Positioned(
+            bottom: 20,
+            left: 20,
+            child: IconButton(
+              icon: Icon(Icons.clear, color: Colors.white, size: 30),
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("스타일을 싫어하셨습니다.💔")),
+                );
+              },
+            ),
+          ),
+          Positioned(
+            bottom: 20,
+            right: 20,
+            child: IconButton(
+              icon: Icon(Icons.check, color: Colors.white, size: 30),
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("스타일을 좋아하셨습니다.❤️")),
+                );
+              },
+            ),
+          ),
+          Positioned(
+            bottom: 20,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: IconButton(
+                icon: Icon(Icons.favorite, color: Colors.white, size: 30),
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("스타일을 저장하셨습니다!😙")),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

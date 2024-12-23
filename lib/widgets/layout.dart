@@ -39,7 +39,7 @@ class _CommonLayoutState extends State<CommonLayout> {
         children: [
           _pages[_currentIndex], // 현재 선택된 페이지
           Positioned(
-            bottom: 20,
+            bottom: 0,
             left: 0,
             right: 0,
             child: _buildBottomNavigationBar(),
@@ -80,7 +80,7 @@ class _CommonLayoutState extends State<CommonLayout> {
   Widget _buildBottomNavigationBar() {
     const double sideMargin = 10; // 양옆마진
     return Container(
-      height: 98,
+      height: 110,
       decoration: const BoxDecoration(
         color: Colors.white,
         boxShadow: [
