@@ -89,7 +89,8 @@ public class S3Controller {
         // FastAPI로 데이터 전송
         String fastApiResponse = testService.sendDataToFastApi(userId, s3Urls);
 
-        return "S3 URLs: " + s3Urls + ", FastAPI Response: " + fastApiResponse;
+        return fastApiResponse;
+     //   "S3 URLs: " + s3Urls + ", FastAPI Response: " + fastApiResponse;
     }
 
     @PostMapping("/upload/{userId}")
@@ -111,9 +112,9 @@ public class S3Controller {
         Map<String, Object> responseJson = objectMapper.readValue(fastApiResponse, Map.class);
 
         // "closet" 내부의 모든 "items"의 status 값을 2로 설정
-        List<Map<String, Object>> closet = (List<Map<String, Object>>) responseJson.get("closet");
-        if (closet != null) {
-            for (Map<String, Object> category : closet) {
+        List<Map<String, Object>> categories = (List<Map<String, Object>>) responseJson.get("categories");
+        if (categories != null) {
+            for (Map<String, Object> category : categories) {
                 List<Map<String, Object>> subcategories = (List<Map<String, Object>>) category.get("subcategories");
                 if (subcategories != null) {
                     for (Map<String, Object> subcategory : subcategories) {

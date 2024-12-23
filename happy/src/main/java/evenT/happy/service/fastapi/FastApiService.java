@@ -12,7 +12,7 @@ public class FastApiService {
     private final WebClient webClient;
 
     public FastApiService(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("http://api-spring:8000").build(); // FastAPI URL
+        this.webClient = webClientBuilder.baseUrl("http://43.203.147.92:8000").build(); // FastAPI ip 주소
     }
 
     public String sendDataToFastApi(String userId, String s3Url) {
