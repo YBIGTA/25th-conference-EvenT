@@ -91,7 +91,7 @@ public class SampleClothesSerivce {
                             categoryDto.getCategoryName(),             // categoryName
                             subcategoryDto.getName(),                  // name
                             itemDto.getAttributes().getColor(),        // color
-                            itemDto.getAttributes().getPrint(),        // print
+                            itemDto.getAttributes().getLength(),        // print
                             itemDto.getS3Url()                         // s3Url
                     );
 

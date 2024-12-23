@@ -2,11 +2,9 @@ package evenT.happy.service.userSaveClothes;
 
 import evenT.happy.dto.userSaveClothesDto.UserSaveClothesRequestDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -28,5 +26,12 @@ public class UserSaveClothesController {
 
         return ResponseEntity.ok("Clothes added successfully for user: " + userId);
     }
+    // userId로 저장된 s3Url 리스트 조회
+    @GetMapping("/user/save/list")
+    public ResponseEntity<List<String>> getUserS3Urls(@RequestParam(name = "userId") String userId) {
+        List<String> s3Urls = userSaveClothesService.getUserS3Urls(userId);
+        return ResponseEntity.ok(s3Urls);
+    }
+
 
 }

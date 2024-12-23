@@ -29,21 +29,16 @@ public class UserSaveClothesService {
 
 
     public void saveUserClothes(String userId, int clothesId) {
-        // userId로 UserSaveClothes 조회 또는 생성
-        UserSaveClothes userSaveClothes = userSaveClothesRepository.findByUserId(userId)
-                .orElse(new UserSaveClothes(userId, new ArrayList<>()));
-
         // clothesId로 ClothesItem 조회
-        evenT.happy.domain.sampleclothes.ClothesItem clothesItem = sampleClothesRepository.findByClothesId(clothesId)
+        ClothesItem clothesItem = sampleClothesRepository.findByClothesId(clothesId)
                 .orElseThrow(() -> new IllegalArgumentException("ClothesItem not found for clothesId: " + clothesId));
 
-        // 중복 여부 확인 후 추가
-        boolean isAlreadyAdded = userSaveClothes.getUserSaveCloset().stream()
-                .anyMatch(item -> item.getClothesId() == clothesId);
+        // 새 UserSaveClothes 객체 생성 및 저장
+        UserSaveClothes userSaveClothes = new UserSaveClothes(userId, List.of(clothesItem));
 
-        if (!isAlreadyAdded) {
-            userSaveClothes.getUserSaveCloset().add(clothesItem);
-        }
+        // 저장 (중복 허용)
+        userSaveClothesRepository.save(userSaveClothes);
+
         // user_action_save_comparison에 저장
         for (Category category : clothesItem.getCloset()) {
             for (Subcategory subcategory : category.getSubcategories()) {
@@ -54,18 +49,15 @@ public class UserSaveClothesService {
                             category.getCategoryName(),
                             subcategory.getName(),
                             item.getAttributes().getColor(),
-                            item.getAttributes().getPrint(),
+                            item.getAttributes().getLength(),
                             item.getS3Url()
                     );
 
-                    // 저장
+                    // 중복 저장 허용
                     userActionSaveComparisonRepository.save(comparisonItem);
                 }
             }
         }
-
-        // 저장
-        userSaveClothesRepository.save(userSaveClothes);
     }
 
     private void mergeCategories(ClothesItem clothesItem, List<Category> categories) {
@@ -113,5 +105,23 @@ public class UserSaveClothesService {
                 subcategory.getItems().add(item);
             }
         }
+    }
+    public List<String> getUserS3Urls(String userId) {
+        List<UserSaveClothes> userSaveClothesList = userSaveClothesRepository.findAllByUserId(userId);
+
+        List<String> s3Urls = new ArrayList<>();
+        for (UserSaveClothes userSaveClothes : userSaveClothesList) {
+            for (ClothesItem clothesItem : userSaveClothes.getUserSaveCloset()) {
+                for (Category category : clothesItem.getCloset()) {
+                    for (Subcategory subcategory : category.getSubcategories()) {
+                        for (Item item : subcategory.getItems()) {
+                            s3Urls.add(item.getS3Url()); // s3Url 추출
+                        }
+                    }
+                }
+            }
+        }
+
+        return s3Urls;
     }
 }

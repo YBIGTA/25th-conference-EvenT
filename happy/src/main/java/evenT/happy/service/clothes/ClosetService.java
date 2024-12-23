@@ -90,7 +90,7 @@ public class ClosetService {
                             categoryDto.getCategoryName(),
                             subcategoryDto.getName(),
                             itemDto.getAttributes().getColor(),
-                            itemDto.getAttributes().getPrint(),
+                            itemDto.getAttributes().getLength(),
                             itemDto.getS3Url()
                     );
 
