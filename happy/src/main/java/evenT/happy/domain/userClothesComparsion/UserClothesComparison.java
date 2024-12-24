@@ -18,12 +18,16 @@ public class UserClothesComparison {
     private String color;
     private String length;
     private String s3Url;
-    public UserClothesComparison(String userId, String categoryName, String name, String color, String length, String s3Url) {
+    private String fulls3url;
+    public UserClothesComparison(String userId, String categoryName, String name, String color, String length, String s3Url,String fulls3url) {
         this.userId = userId;
         this.categoryName = categoryName;
         this.name = name;
         this.color = color;
         this.length = length;
         this.s3Url = s3Url;
+        this.fulls3url = fulls3url;
     }
+
+
 }

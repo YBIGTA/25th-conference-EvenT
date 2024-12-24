@@ -11,4 +11,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class LikeRequest {
     private String userId;
+    private int clothesId;
 }

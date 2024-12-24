@@ -32,7 +32,7 @@ public class UserSaveClothesService {
         // clothesId로 ClothesItem 조회
         ClothesItem clothesItem = sampleClothesRepository.findByClothesId(clothesId)
                 .orElseThrow(() -> new IllegalArgumentException("ClothesItem not found for clothesId: " + clothesId));
-        String fulls3url = clothesItem.getFulls3url(); // ClothesItem에서 fulls3url 가져옴
+        String fulls3url = (""); // ClothesItem에서 fulls3url 가져옴
         List<Double> vector = List.of(0.1, 0.2, 0.3, 0.4); // 예시 벡터 값
 
         // 새 UserSaveClothes 객체 생성 및 저장

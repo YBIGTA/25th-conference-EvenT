@@ -2,7 +2,7 @@
   <library name="Gradle: org.springframework.security:spring-security-core:6.3.4" type="java-imported" external-system-id="GRADLE">
     <properties groupId="org.springframework.security" artifactId="spring-security-core" version="6.3.4" />
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.security/spring-security-core/6.3.4/b090f940b1db00f58f5cad0675ce82670cc75904/spring-security-core-6.3.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../../../../openlogic-openjdk-21.0.5+11-windows-x64/lib/caches/modules-2/files-2.1/org.springframework.security/spring-security-core/6.3.4/b090f940b1db00f58f5cad0675ce82670cc75904/spring-security-core-6.3.4.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

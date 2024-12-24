@@ -78,11 +78,19 @@ public class PineconeController {
     // Call the service
         return pineconeService.findSimilarDocuments(userId, embedding, maxResults, namespace);
 }
+// clothesId 값 받아서 들려서 clothesId 값으로 벡터 값이랑 usrPrefernce 값 업데이트 하면 됨
     @PostMapping("/action/like")
     public ResponseEntity<String> likeItem(@RequestBody LikeRequest likeRequest) {
         String userId = likeRequest.getUserId();
-        userService.updateUserPreference(userId);
-        return ResponseEntity.ok("User preference updated successfully.");
+        int clothesId = likeRequest.getClothesId();
+
+        boolean isUpdated = userService.updateUserPreference(userId, clothesId);
+
+        if (isUpdated) {
+            return ResponseEntity.ok("User preference updated successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User or clothes not found.");
+        }
     }
     // 호출되면 뒤에 다가 데이터 추가
     @PostMapping("/action/add1")

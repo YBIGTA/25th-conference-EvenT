@@ -15,10 +15,16 @@ public class ComparisonController {
 
     private final ComparisonService comparisonService;
     // userId로 데이터 비교
-    @GetMapping("/compare/user-clothes")
+    @GetMapping("/compare/user/matched")
     public ResponseEntity<Map<String, List<String>>> compareUserClothes(@RequestParam(name = "userId") String userId) {
         Map<String, List<String>> groupedMatches = comparisonService.compareAndGroupMatches(userId);
         return ResponseEntity.ok(groupedMatches);
+    }
+    @GetMapping("/compare/user/unmatched")
+    public ResponseEntity<Map<String, List<String>>> compareUnmatchedUserClothes(
+            @RequestParam(name = "userId") String userId) {
+        Map<String, List<String>> unmatchedResults = comparisonService.findUnmatchedComparisons(userId);
+        return ResponseEntity.ok(unmatchedResults);
     }
 
 }

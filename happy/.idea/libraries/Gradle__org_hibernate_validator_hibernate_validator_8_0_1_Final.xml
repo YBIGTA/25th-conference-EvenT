@@ -2,7 +2,7 @@
   <library name="Gradle: org.hibernate.validator:hibernate-validator:8.0.1.Final" type="java-imported" external-system-id="GRADLE">
     <properties groupId="org.hibernate.validator" artifactId="hibernate-validator" version="8.0.1.Final" />
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.hibernate.validator/hibernate-validator/8.0.1.Final/e49e116b3d3928060599b176b3538bb848718e95/hibernate-validator-8.0.1.Final.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../../../../openlogic-openjdk-21.0.5+11-windows-x64/lib/caches/modules-2/files-2.1/org.hibernate.validator/hibernate-validator/8.0.1.Final/e49e116b3d3928060599b176b3538bb848718e95/hibernate-validator-8.0.1.Final.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

@@ -2,12 +2,13 @@ package evenT.happy.service;
 import evenT.happy.config.JwtUtil;
 import evenT.happy.config.exception.LoginFailedException;
 import evenT.happy.config.exception.UserAlreadyExistsException;
+import evenT.happy.domain.sampleclothes.ClothesItem;
+import evenT.happy.repository.ClothesRepository;
 import evenT.happy.service.que.RecommendedItem;
 import evenT.happy.domain.User;
 import evenT.happy.dto.LoginDto;
 import evenT.happy.dto.UserSignupDto;
 import evenT.happy.repository.UserRepository;
-import evenT.happy.service.pinecone.PineconeService;
 import evenT.happy.service.que.RecommendationQueue;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,10 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Queue;
-import java.util.concurrent.CompletableFuture;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,7 +33,7 @@ public class UserService {
     public Optional<User> findByUserId(String userId){
         return userRepository.findByUserId(userId);
     }
-
+    private final ClothesRepository clothesRepository;
     public String SignUp(UserSignupDto userSignupDto){
         if (userRepository.findByUserId(userSignupDto.getUserId()).isPresent()){
             throw new UserAlreadyExistsException("이미 있는 ID 입니다");
@@ -110,9 +108,9 @@ public class UserService {
         return token;
     }
     private List<Double> calculatePreferenceVector(List<String> select3Styles) {
-        // Pinecone용 벡터 값 생성 로직
-        return select3Styles.stream()
-                .map(style -> style.hashCode() % 1000 / 1000.0) // float -> double로 변경
+        Random random = new Random();
+        return random.doubles(128, 0, 1) // Generate 128 random values between 0 and 1
+                .boxed()
                 .collect(Collectors.toList());
     }
 
@@ -141,25 +139,44 @@ public class UserService {
     public Queue<RecommendedItem> getRecommendationsForUser(String userId) {
         return recommendationQueue.getRecommendations(userId);
     }
-    public void updateUserPreference(String userId) {
+    // Service Class
+    // Service Class
+    public boolean updateUserPreference(String userId, int clothesId) {
         Optional<User> optionalUser = userRepository.findByUserId(userId);
+        Optional<ClothesItem> optionalClothesItem = clothesRepository.findByClothesId(clothesId);
 
-        if (optionalUser.isPresent()) {
+        if (optionalUser.isPresent() && optionalClothesItem.isPresent()) {
             User user = optionalUser.get();
+            ClothesItem clothesItem = optionalClothesItem.get();
 
-            // Preference 값 업데이트 (예: 0.1씩 더하기)
-            List<Double> preferences = user.getPreference();
-            for (int i = 0; i < preferences.size(); i++) {
-                preferences.set(i, preferences.get(i) + 0.1);
-            }
+            double[] userPreference = user.getPreference().stream().mapToDouble(Double::doubleValue).toArray();
+            double[] clothesEmbedding = clothesItem.getVector().stream().mapToDouble(Double::doubleValue).toArray();
 
-            user.setPreference(preferences);
+            // Update user preference vector
+            double[] updatedPreference = updatePreferenceVector(userPreference, clothesEmbedding);
+
+            // Convert the updatedPreference array back to a List<Double>
+            List<Double> updatedPreferenceList = Arrays.stream(updatedPreference).boxed().collect(Collectors.toList());
+            user.setPreference(updatedPreferenceList);
+
             userRepository.save(user);
-
-            System.out.println("Updated preferences for userId " + userId + ": " + preferences);
+            System.out.println("Updated preferences for userId " + userId + ": " + updatedPreferenceList);
+            return true;
         } else {
-            System.out.println("User not found with userId: " + userId);
+            System.out.println("User or clothes not found with userId: " + userId + " or clothesId: " + clothesId);
+            return false;
         }
+    }
+
+    // Utility Method
+    public static double[] updatePreferenceVector(double[] userPreference, double[] imageEmbedding) {
+        double alpha = 0.9;
+
+        for (int i = 0; i < userPreference.length; i++) {
+            userPreference[i] = alpha * userPreference[i] + (1 - alpha) * imageEmbedding[i];
+        }
+
+        return userPreference;
     }
 
 //    public User updateUser(String id, User updatedUser) {

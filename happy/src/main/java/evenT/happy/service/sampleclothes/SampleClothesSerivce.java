@@ -1,6 +1,5 @@
 package evenT.happy.service.sampleclothes;
 
-import evenT.happy.domain.Clothes;
 import evenT.happy.domain.sampleclothes.Category;
 import evenT.happy.domain.closet.ClosetItem;
 import evenT.happy.domain.sampleclothes.Item;

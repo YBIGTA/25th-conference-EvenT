@@ -86,6 +86,7 @@ public class ClosetService {
 
                     UserClothesComparison comparisonItem = new UserClothesComparison(
                             requestDto.getUserId(),
+                            requestDto.getFulls3url(),
                             categoryDto.getCategoryName(),
                             subcategoryDto.getName(),
                             itemDto.getAttributes().getColor(),
