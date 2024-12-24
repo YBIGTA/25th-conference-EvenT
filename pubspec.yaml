@@ -116,5 +116,11 @@ flutter:
   assets:
     - .env
     - assets/images/
+    - assets/images/white/
+    - assets/images/beige/
+    - assets/images/brown/
+    - assets/images/grey/
+    - assets/images/red/
+    - assets/images/skyblue/
     - assets/homepage_img.png
     - assets/icons/

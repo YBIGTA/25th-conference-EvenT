@@ -25,7 +25,7 @@ class _SavePageState extends State<SavePage> {
     _fetchSavedStyles(widget.userId);
   }
 
-  // 서버에서 데이터 가져오는 함수
+  // 서버에서 데이터 가져오는 함수 - 저장한 코디
   Future<void> _fetchSavedStyles(String userId) async {
     try {
       final serverUrl = createUrl('user/save/list?userId=$userId');
@@ -56,10 +56,30 @@ class _SavePageState extends State<SavePage> {
     }
   }
 
+  // 서버에서 데이터 가져오는 함수 - 가능 코디
+  Future<Map<String, List<String>>> fetchPossibleCoordi(String userId) async {
+    try {
+      final serverUrl = createUrl('compare/user-clothes?userId=testUser123');
+      print('가능 코디 GET url: $serverUrl');
+      final response = await http.get(Uri.parse(serverUrl));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        print('서버에서 받은 데이터: $data');
+        return data.map((key, value) => MapEntry(key, List<String>.from(value)));
+      } else {
+        throw Exception('Failed to load possible coordi data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching possible coordi data: $e');
+      return {};
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: TabBar(
         labelColor: Colors.black, // 선택된 탭의 텍스트 색상
@@ -84,13 +104,15 @@ class _SavePageState extends State<SavePage> {
         ),
         tabs: const [
           Tab(text: "저장한 스타일"),
-          Tab(text: "가능 코디"),
+          Tab(text: "가능한 코디"),
+          Tab(text: "추천 아이템"),
         ],
       ),
         body: TabBarView(
           children: [
             _buildSavedStylesTab(),
             _buildPossibleCoordiTab(),
+            _buildRecommendedTab(),
           ],
         ),
       ),
@@ -99,6 +121,7 @@ class _SavePageState extends State<SavePage> {
 
   // "저장한 스타일" 탭 UI
   Widget _buildSavedStylesTab() {
+    print("--------저장한 스타일 탭--------");
     if (isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -142,8 +165,97 @@ class _SavePageState extends State<SavePage> {
 
   }
 
-  // "가능 코디" 탭 UI (추후 구현 가능)
+  // "가능 코디" 탭 UI
   Widget _buildPossibleCoordiTab() {
-    return const Center(child: Text("가능 코디 기능은 여기에 구현될 예정입니다."));
+    print("--------가능 코디 탭--------");
+    return FutureBuilder<Map<String, List<String>>>(
+      future: fetchPossibleCoordi(widget.userId), // 서버에서 데이터 가져오기
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator()); // 로딩 중
+        } else if (snapshot.hasError) {
+          return const Center(child: Text("데이터를 가져오는 데 실패했습니다.")); // 에러 처리
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(child: Text("가능 코디가 없습니다.")); // 데이터 없음
+        }
+
+        final styleToClothes = snapshot.data!;
+
+        return ListView.builder(
+          padding: const EdgeInsets.all(8.0),
+          itemCount: styleToClothes.length,
+          itemBuilder: (context, index) {
+            final styleLink = styleToClothes.keys.elementAt(index);
+            final clothesLinks = styleToClothes[styleLink]!;
+            return _buildStyleBlock(styleLink, clothesLinks);
+          },
+        );
+      },
+    );
+  }
+
+  // 스타일 블럭 UI
+  Widget _buildStyleBlock(String styleLink, List<String> clothesLinks) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 스타일 이미지
+          Container(
+            width: 100, // 스타일 이미지 폭
+            height: 133, // 3:4 비율
+            margin: const EdgeInsets.only(right: 8.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8.0),
+              color: Colors.grey[200],
+            ),
+            clipBehavior: Clip.hardEdge,
+            child: Image.network(
+              styleLink,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return const Center(
+                  child: Icon(Icons.broken_image, size: 50),
+                );
+              },
+            ),
+          ),
+          // 옷 이미지 리스트
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: clothesLinks.take(3).map((clothesLink) {
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 8.0),
+                  width: double.infinity,
+                  height: 66.5, // 스타일 이미지의 세로 크기 133의 절반
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.0),
+                    color: Colors.grey[200],
+                  ),
+                  clipBehavior: Clip.hardEdge,
+                  child: Image.network(
+                    clothesLink,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Center(
+                        child: Icon(Icons.broken_image, size: 50),
+                      );
+                    },
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+  //"추천아이템" 탭 UI
+  Widget _buildRecommendedTab() {
+    return const Center(child: Text("추천코디 기능은 여기에 구현될 예정입니다."));
   }
 }

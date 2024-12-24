@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'tops_details.dart';
 import 'bottoms_details.dart';
 import '../../widgets/font.dart';
+import '../../widgets/button.dart';
+import '../../home_page.dart';
 
 //블록 사이 여백
 const btwblocks = SizedBox(height: 24);
@@ -29,10 +31,10 @@ class SignupDBPage extends StatelessWidget {
 
   // 아우터 블록 데이터
   static const List<Map<String, String>> outersItems = [
-    {'label': '패딩', 'imagePath': 'assets/images/short_pants.png'},
-    {'label': '코트', 'imagePath': 'assets/images/long_pants.png'},
-    {'label': '기다건', 'imagePath': 'assets/images/skirts.png'},
-    {'label': '재킷', 'imagePath': 'assets/images/skirts.png'}
+    {'label': '패딩', 'imagePath': 'assets/images/padded_jk.png'},
+    {'label': '코트', 'imagePath': 'assets/images/coat.png'},
+    {'label': '가디건', 'imagePath': 'assets/images/cardigan.png'},
+    {'label': '재킷', 'imagePath': 'assets/images/jacket.png'}
   ];
 
   @override
@@ -40,24 +42,40 @@ class SignupDBPage extends StatelessWidget {
     return Scaffold(
       // backgroundColor: Colors.white,
       appBar: AppBar(
-        scrolledUnderElevation: 0,
         backgroundColor: Colors.white,
-        elevation: 0, // 그림자 제거
+        scrolledUnderElevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.close), // X 버튼
+          onPressed: () {
+            Navigator.pop(context); // 홈으로 돌아가기
+          },
+        ),
+        title: const Text(
+          '내 옷장 만들기',
+          style: AppFonts.appBarStyle,
+        ),
+        elevation: 0.0,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(
+        30.0, // 좌측마진
+        10.0, // 상단마진
+        30.0, // 우측마진
+        80.0, // 하단마진
+      ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 질문 텍스트
+            const SizedBox(height: 20),
             const Center( // 중앙 정렬
               child: Text(
-                'Q3. 집에 무슨 옷이 있더라?',
+                '집에 있는 옷들을 추가해주세요!',
                 textAlign: TextAlign.center,
                 style: AppFonts.highlightStyle,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 15),
 
             // 상의 텍스트
             const Text(
@@ -71,10 +89,11 @@ class SignupDBPage extends StatelessWidget {
             GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
               ),
-              padding: EdgeInsets.zero,
+
+              padding: const EdgeInsets.only(bottom:10),
               itemCount: topsItems.length,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -114,10 +133,10 @@ class SignupDBPage extends StatelessWidget {
             GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
               ),
-              padding: EdgeInsets.zero,
+              padding: const EdgeInsets.only(bottom:10),
               itemCount: bottomsItems.length,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -157,10 +176,10 @@ class SignupDBPage extends StatelessWidget {
             GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
               ),
-              padding: EdgeInsets.zero,
+              padding: const EdgeInsets.only(bottom:10),
               itemCount: outersItems.length,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -187,6 +206,39 @@ class SignupDBPage extends StatelessWidget {
               },
 
             ),
+
+            const SizedBox(height: 50,),
+
+            // 회원가입 버튼 추가
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  // 회원가입 완료 메시지
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('내 옷장이 만들어졌습니다! 이제 로그인을 진행해주세요.'),
+                      duration: Duration(seconds: 1),
+                    ),
+                  );
+
+                  // HomePage로 이동
+                  Future.delayed(const Duration(seconds: 2), () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const HomePage()),
+                    );
+                  });
+                },
+                style: AppButtonStyles.otherButton(), // 버튼 스타일 적용
+                child: const Text(
+                  '옷장 만들기',
+                  style: AppFonts.loginStyle,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 10,),
+
           ],
         ),
       ),
@@ -196,29 +248,32 @@ class SignupDBPage extends StatelessWidget {
   Widget buildClothingBlock(String label, String imagePath) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey, width: 1.0),
-        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Color(0xFFBEBEBE), width: 1.0),
+        borderRadius: BorderRadius.circular(13),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.fromLTRB(
+                5.0, // 좌측마진
+                8.0, // 상단마진
+                5.0, // 우측마진
+                0, // 하단마진
+              ),
               child: Image.asset(
                 imagePath,
                 fit: BoxFit.contain,
               ),
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 5),
           Text(
             label,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-            ),
+            style: AppFonts.signupDB
           ),
+          const SizedBox(height:8)
         ],
       ),
     );

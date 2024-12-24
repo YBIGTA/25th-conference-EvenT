@@ -1,3 +1,4 @@
+import 'package:event_flutter/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'signup_db.dart';
 import 'package:http/http.dart' as http;
@@ -151,7 +152,7 @@ class _SignUpPageState extends State<SignUpPage> {
       print("전송 데이터: $data");
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('회원가입이 완료되었습니다!'),
+          content: Text('회원가입이 완료되었습니다. 이제 옷장에 옷을 추가해주세요!'),
           duration: Duration(seconds: 2),
         ),
       );
@@ -393,11 +394,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
                   ElevatedButton(
                     onPressed: _scrollToSecondPage,
-                    style: ElevatedButton.styleFrom(
-                      elevation: 0,
-                      backgroundColor: const Color(0xFFB8A39F),
-                      fixedSize: const Size(180,55),
-                    ),
+                    style: AppButtonStyles.otherButton(),
                     child: const Text(
                       '입력 완료',
                       style: AppFonts.loginStyle,
@@ -508,13 +505,9 @@ class _SignUpPageState extends State<SignUpPage> {
                         },
 
 
-                        style: ElevatedButton.styleFrom(
-                          elevation: 0,
-                          backgroundColor: const Color(0xFFB8A39F),
-                          minimumSize: const Size(180, 55),
-                        ),
+                        style: AppButtonStyles.otherButton(),
                         child: const Text(
-                          '입력 완료',
+                          '회원가입',
                           style: AppFonts.loginStyle,
                         ),
                       ),
@@ -528,11 +521,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             MaterialPageRoute(builder: (context) => SignupDBPage(userId: idController.text)),
                           );
                         },
-                        style: ElevatedButton.styleFrom(
-                          elevation: 0,
-                          backgroundColor: const Color(0xFFB8A39F),
-                          fixedSize: const Size(180, 55),
-                        ),
+                        style: AppButtonStyles.otherButton(),
                         child: const Text(
                           '서버x버튼',
                           style: TextStyle(

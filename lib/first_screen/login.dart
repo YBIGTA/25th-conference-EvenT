@@ -201,29 +201,29 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10.0),
-              // 서버 안열었을 때
-              ElevatedButton(
-                onPressed: () {
-                  // Navigator를 사용하여 signup_db 페이지로 이동
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => CommonLayout(userId:'noID')),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  elevation: 0,
-                  backgroundColor: const Color(0xFFB8A39F),
-                  fixedSize: const Size(180, 55),
-                ),
-                child: const Text(
-                  '서버X버튼',
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ),
+              // // 서버 안열었을 때
+              // ElevatedButton(
+              //   onPressed: () {
+              //     // Navigator를 사용하여 signup_db 페이지로 이동
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(builder: (context) => CommonLayout(userId:'noID')),
+              //     );
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     elevation: 0,
+              //     backgroundColor: const Color(0xFFB8A39F),
+              //     fixedSize: const Size(180, 55),
+              //   ),
+              //   child: const Text(
+              //     '서버X버튼',
+              //     style: TextStyle(
+              //       fontSize: 15,
+              //       color: Colors.white,
+              //       fontWeight: FontWeight.w900,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),

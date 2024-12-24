@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart'; // SVG 파일을 사용하기 위한 패키지
 import '../home_screen/style_page.dart';
 import '../home_screen/save_page.dart';
+import '../home_screen/add_page.dart';
 import '../home_screen/closet_page.dart';
 
 class CommonLayout extends StatefulWidget {
@@ -27,7 +28,7 @@ class _CommonLayoutState extends State<CommonLayout> {
       Center(child: Text('등록 페이지')), // userId 전달
       StylePage(userId: widget.userId), // userId 전달
       SavePage(userId: widget.userId), // userId 전달
-      ClosetPage(), // userId 전달
+      ClosetPage(userId: widget.userId), // userId 전달
     ];
 
   }
@@ -55,14 +56,24 @@ class _CommonLayoutState extends State<CommonLayout> {
       elevation: 0,
       title: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Text(
-          "EvenT",
-          style: const TextStyle(
-            fontFamily: 'Prtendard',
-            color: Color(0xFF70605E), // black or 0xFF70605E
-            fontSize: 22,
-            fontWeight: FontWeight.w600,
-          ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min, // 텍스트와 아이콘 크기에 맞게 Row 크기 조절
+          children: [
+            Text(
+              "EvenT",
+              style: const TextStyle(
+                fontFamily: 'Pretendard', // 주의: 오타 수정 ('Prtendard' → 'Pretendard')
+                color: Color(0xFF70605E), // black or 0xFF70605E
+                fontSize: 22,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const Icon(
+              Icons.dry_cleaning_outlined, // 원하는 아이콘
+              color: Color(0xFF70605E), // 텍스트와 동일한 색상 적용
+              size: 24, // 아이콘 크기
+            ),
+          ],
         ),
       ),
       centerTitle: false,
@@ -77,8 +88,11 @@ class _CommonLayoutState extends State<CommonLayout> {
     );
   }
 
+  // 1) 사각형 너비를 고정 상수로 정의
+  final double _indicatorWidth = 80;
+
   Widget _buildBottomNavigationBar() {
-    const double sideMargin = 10; // 양옆마진
+    const double sideMargin = 10;
     return Container(
       height: 110,
       decoration: const BoxDecoration(
@@ -93,20 +107,20 @@ class _CommonLayoutState extends State<CommonLayout> {
       ),
       child: Stack(
         children: [
-          // 활성화된 탭의 상단 경계선 표시
+          // 선택된 탭 표시 사각형
           if (_currentIndex != -1)
             Positioned(
               left: _getIndicatorPosition(_currentIndex, sideMargin),
               top: 0,
               child: Container(
-                width: 80,
+                width: _indicatorWidth, // 사각형 너비를 80으로
                 height: 4,
-                color: Color(0xFFC4B8B6), // 활성화된 탭의 색상
+                color: const Color(0xFFC4B8B6),
               ),
             ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: sideMargin),
-            child:Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _buildBottomNavItem('assets/icons/register.svg', '등록', 0),
@@ -115,10 +129,19 @@ class _CommonLayoutState extends State<CommonLayout> {
                 _buildBottomNavItem('assets/icons/closet.svg', '옷장', 3),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
+  }
+
+  double _getIndicatorPosition(int index, double sideMargin) {
+    // 탭 너비 = (화면 너비 - 양옆마진) / 탭 개수
+    double tabWidth = (MediaQuery.of(context).size.width - (sideMargin * 2)) / 4;
+
+    // 사각형 중앙을 탭의 중앙에 맞추기 위해 탭 중앙에서 사각형 절반만큼 좌표를 빼준다
+    // 사각형 너비가 80이므로 80 / 2 = 40
+    return sideMargin + (index * tabWidth) + (tabWidth / 2) - (_indicatorWidth / 2);
   }
 
   Widget _buildBottomNavItem(String iconPath, String label, int index) {
@@ -154,12 +177,5 @@ class _CommonLayoutState extends State<CommonLayout> {
     );
   }
 
-  /// 활성화된 탭의 사각형 위치 계산
-  double _getIndicatorPosition(int index, double sideMargin) {
-    // 탭 너비를 계산 (화면 너비 - 양옆 마진)
-    double tabWidth = (MediaQuery.of(context).size.width - (sideMargin * 2)) / 4;
 
-    // 각 탭의 중앙에 사각형 위치 (좌측 마진 + 탭 시작점 + 탭 중앙 - 사각형 절반 너비)
-    return sideMargin + (index * tabWidth) + (tabWidth / 2) - (60 / 2); // 60은 사각형 너비
-  }
 }

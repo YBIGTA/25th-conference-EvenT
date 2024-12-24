@@ -3,6 +3,7 @@ import 'signup_db.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../config/constants.dart';
+import '../../widgets/font.dart';
 
 // 서버 URL
 final String apiUrl = createUrl('simpledb/add');
@@ -53,7 +54,24 @@ class _TopsDetailPageState extends State<TopsDetailPage> {
   String selectedColor = '화이트'; // 기본 선택 색상
   String selectedLength = ''; // 기본값은 선택하지 않은 상태
   String customName = '';
-  bool showColorOptions = false; // 색상 선택 토글 상태
+
+  late String imagePath; // 동적으로 변경되는 이미지 경로
+
+  @override
+  void initState() {
+    super.initState();
+    final fileName = widget.imagePath.split('/').last;
+    imagePath = 'assets/images/white/$fileName'; // 초기값 설정
+  }
+
+  void _updateImagePath(String color) {
+    // 색상별 디렉토리를 추가한 이미지 경로 생성
+    final colorDir = _mapColorToDirectoryName(color); // 색상 이름을 디렉토리로 사용
+    final fileName = widget.imagePath.split('/').last; // 기존 경로에서 파일명만 추출
+    setState(() {
+      imagePath = 'assets/images/$colorDir/$fileName'; // 새로운 경로 생성
+    });
+  }
 
   // 색상 리스트
   final List<String> colorOptions = [
@@ -67,249 +85,267 @@ class _TopsDetailPageState extends State<TopsDetailPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: Container(
-          width: 347,
-          height: 450,
-          decoration: ShapeDecoration(
-            color: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(26),
-            ),
-            shadows: const [
-              BoxShadow(
-                color: Color(0x19000000),
-                blurRadius: 22,
-                offset: Offset(0, 5),
-                spreadRadius: -4,
+        // ▼ 높이를 고정하면 overflow 발생 위험이 있으므로, 스크롤 가능하도록 변경 (필요 시)
+        //    필요 없다면 아래 SingleChildScrollView는 제거하셔도 됩니다.
+        child: SingleChildScrollView(
+          child: Container(
+            // width는 유지, height 고정은 제거하는 것을 권장합니다.
+            width: 347,
+            // height: 420, // <- 제거 권장
+            decoration: ShapeDecoration(
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(26),
               ),
-            ],
-          ),
-          child: Stack(
-            children: [
-              Column(
-                children: [
-                  const SizedBox(height: 20),
-                  const Text(
-                    '자세한 정보를 입력한 뒤 옷장에 추가해주세요!',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: -0.30,
+              shadows: const [
+                BoxShadow(
+                  color: Color(0x19000000),
+                  blurRadius: 22,
+                  offset: Offset(0, 5),
+                  spreadRadius: -4,
+                ),
+              ],
+            ),
+            child: Stack(
+              children: [
+                Column(
+                  children: [
+                    const SizedBox(height: 23),
+                    const Text(
+                      '자세한 정보를 입력 후 추가해주세요!',
+                      textAlign: TextAlign.center,
+                      style: AppFonts.detailsDB,
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  Container(
-                    width: 120,
-                    height: 120,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(widget.imagePath),
-                        fit: BoxFit.cover,
-                      ),
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 10,
-                          offset: Offset(0, 5),
+                    const SizedBox(height: 10),
+                    Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(imagePath),
+                          fit: BoxFit.cover,
                         ),
-                      ],
+                        borderRadius: BorderRadius.circular(16),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    widget.label,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                    const SizedBox(height: 10),
+                    Text(
+                      widget.label,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                    const SizedBox(height: 20),
 
-                        // 지우기
-                        // 색상 및 기장 버튼을 같은 행(Row)에 배치
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // 색상 버튼
-                            Row(
-                              children: [
-                                const Text(
-                                  '색상',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
+                    // ▼ 색상 및 기장 선택 영역
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // 색상 & 기장 버튼을 같은 행(Row)에 배치
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              // 색상 버튼
+                              Row(
+                                children: [
+                                  const Text(
+                                    '색상',
+                                    style: AppFonts.detailsDB2,
                                   ),
-                                ),
-                                const SizedBox(width: 10),
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      showColorOptions = !showColorOptions;
-                                    });
-                                  },
-                                  child: Container(
-                                    width: 80,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[200],
-                                      borderRadius: BorderRadius.circular(20),
-                                      border: Border.all(color: Colors.grey, width: 1),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
-                                          margin: const EdgeInsets.only(left: 5),
-                                          width: 24,
-                                          height: 24,
-                                          decoration: BoxDecoration(
-                                            color: _getColor(selectedColor),
-                                            shape: BoxShape.circle,
+                                  const SizedBox(width: 10),
+                                  GestureDetector(
+                                    onTap: () {
+                                      // ▼ 클릭 시 BottomSheet가 팝업으로 뜨도록 변경
+                                      showModalBottomSheet(
+                                        backgroundColor: Colors.white,
+                                        context: context,
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(20),
                                           ),
                                         ),
-                                        const Icon(Icons.arrow_drop_down),
-                                      ],
+                                        builder: (context) {
+                                          return Padding(
+                                            padding: const EdgeInsets.only(bottom: 50, left: 20, right: 20, top: 20),
+                                            child: Wrap(
+                                              spacing: 5,
+                                              runSpacing: 10,
+                                              children: colorOptions.map((color) {
+                                                return GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      selectedColor = color;
+                                                      _updateImagePath(color);
+                                                    });
+                                                    Navigator.of(context).pop(); // 팝업 닫기
+                                                  },
+                                                  child: Container(
+                                                    margin: const EdgeInsets.only(bottom: 8),
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        Container(
+                                                          width: 20,
+                                                          height: 20,
+                                                          decoration: BoxDecoration(
+                                                            color: _getColor(color),
+                                                            shape: BoxShape.circle,
+                                                            border: Border.all(
+                                                              color: selectedColor == color
+                                                                  ? Colors.blue
+                                                                  : Colors.grey,
+                                                              width: selectedColor == color ? 2 : 1,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(width: 6),
+                                                        Text(color),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                              }).toList(),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: Container(
+                                      width: 70,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(color: Colors.grey, width: 1),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            margin: const EdgeInsets.only(left: 7),
+                                            width: 26,
+                                            height: 26,
+                                            decoration: BoxDecoration(
+                                              color: _getColor(selectedColor),
+                                              shape: BoxShape.circle,
+                                              border: Border.all(color: Colors.grey, width: 0.5),
+                                            ),
+                                          ),
+                                          const Icon(Icons.arrow_drop_down),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            // 기장 버튼
-                            Row(
-                              children: [
-                                const Text(
-                                  '기장',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
+                                ],
+                              ),
+
+                              // 기장 버튼
+                              Row(
+                                children: [
+                                  const Text(
+                                    '기장',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 10),
-                                Row(
-                                  children: ['롱', '숏', '미디움']
-                                      .map(
-                                        (length) => GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          // 이미 선택된 기장을 다시 클릭하면 취소
-                                          if (selectedLength == length) {
-                                            selectedLength = ''; // 선택 취소
-                                          } else {
-                                            selectedLength = length; // 새로운 기장 선택
-                                          }
-                                        });
-                                      },
-                                      child: Container(
-                                        margin: const EdgeInsets.symmetric(horizontal: 5),
-                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                        decoration: BoxDecoration(
-                                          color: selectedLength == length ? Colors.blue : Colors.grey[200],
-                                          borderRadius: BorderRadius.circular(20),
-                                        ),
-                                        child: Text(
-                                          length,
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: selectedLength == length ? Colors.white : Colors.black,
-                                            fontWeight: FontWeight.bold,
+                                  const SizedBox(width: 10),
+                                  Row(
+                                    children: ['크롭', '미디움', '롱']
+                                        .map(
+                                          (length) => GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            // 이미 선택된 기장을 다시 클릭하면 취소
+                                            if (selectedLength == length) {
+                                              selectedLength = ''; // 선택 취소
+                                            } else {
+                                              selectedLength = length; // 새로운 기장 선택
+                                            }
+                                          });
+                                        },
+                                        child: Container(
+                                          margin: const EdgeInsets.symmetric(horizontal: 3),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 6),
+                                          decoration: BoxDecoration(
+                                            color: selectedLength == length
+                                                ? const Color(0xFFB8A39F)
+                                                : Colors.grey[200],
+                                            borderRadius: BorderRadius.circular(20),
+                                          ),
+                                          child: Text(
+                                            length,
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: selectedLength == length
+                                                  ? Colors.white
+                                                  : Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  )
-                                      .toList(),
+                                    )
+                                        .toList(),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+
+                          const SizedBox(height: 15),
+
+                          // 메모 입력
+                          SizedBox(
+                            width: 300,
+                            height: 50,
+                            child: TextField(
+                              decoration: InputDecoration(
+                                hintText: '메모를 입력하세요.',
+                                contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 0,
+                                  horizontal: 20.0,
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
-
-
-
-                        // 색상 옵션 표시
-                        if (showColorOptions)
-                          Column(
-                            children: colorOptions
-                                .map(
-                                  (color) => GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    selectedColor = color;
-                                    showColorOptions = false;
-                                  });
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.symmetric(vertical: 5),
-                                  width: double.infinity,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    color: _getColor(color),
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(
-                                      color: selectedColor == color ? Colors.blue : Colors.grey,
-                                      width: selectedColor == color ? 2 : 1,
-                                    ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(40),
+                                  borderSide: const BorderSide(
+                                    color: Colors.grey,
+                                    width: 1,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(40),
+                                  borderSide: const BorderSide(
+                                    color: Colors.brown,
+                                    width: 1.5,
                                   ),
                                 ),
                               ),
-                            )
-                                .toList(),
-                          ),
-                        const SizedBox(height: 20),
-
-                        //메모
-                        // const Text(
-                        //   '메모',
-                        //   style: TextStyle(
-                        //     fontSize: 14,
-                        //     fontWeight: FontWeight.w600,
-                        //   ),
-                        // ),
-                        const SizedBox(height: 5),
-                        TextField(
-                          decoration: InputDecoration(
-                            hintText: '메모를 입력하세요.',
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(40),
-                              borderSide: BorderSide(
-                                color: Colors.grey,
-                                width: 1,
-                              )
+                              onChanged: (value) {
+                                setState(() {
+                                  customName = value;
+                                });
+                              },
                             ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(40), // 보더
-                              borderSide: BorderSide(
-                                color: Colors.brown, // 포커스 상태의 테두리 색상
-                                width: 1.5, // 포커스 상태에서 두꺼운 테두리
-                              )
-                            )
                           ),
-                          onChanged: (value) {
-                            setState(() {
-                              customName = value;
-                            });
-                          },
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  const Spacer(),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 20.0),
-                    child: ElevatedButton(
+
+                    const SizedBox(height: 20),
+
+                    // ▼ 데이터 전송 버튼
+                    ElevatedButton(
                       onPressed: () async {
                         final Map<String, dynamic> data = {
                           "userId": widget.userId,
+                          "fulls3url": '',
                           "categories": [
                             {
                               "categoryName": "상의",
@@ -321,11 +357,12 @@ class _TopsDetailPageState extends State<TopsDetailPage> {
                                       "customName": customName,
                                       "attributes": {
                                         "color": selectedColor,
+                                        "print": "",
                                         "length": selectedLength.isEmpty
                                             ? "선택되지 않음"
                                             : selectedLength,
                                       },
-                                      "s3Url": widget.imagePath,
+                                      "s3Url": imagePath,
                                       "quantity": 1,
                                       "state": 1,
                                     }
@@ -342,7 +379,7 @@ class _TopsDetailPageState extends State<TopsDetailPage> {
 
                         if (success) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("옷장이 성공적으로 업데이트되었습니다!")),
+                            const SnackBar(content: Text("옷장에 옷이 성공적으로 추가되었어요 😚")),
                           );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -352,66 +389,111 @@ class _TopsDetailPageState extends State<TopsDetailPage> {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFB8A39F),
-                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
+                        shape: const CircleBorder(),
+                        padding: const EdgeInsets.all(14),
+                        elevation: 5,
+                        shadowColor: Colors.white70,
                       ),
-                      child: const Text(
-                        '추가하기',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      child: const Icon(
+                        Icons.add, // 플러스 아이콘
+                        color: Colors.white,
+                        size: 24,
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                ],
-              ),
-              Positioned(
-                top: 10,
-                right: 10,
-                child: IconButton(
-                  icon: const Icon(Icons.close, color: Colors.black),
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation1, animation2) => SignupDBPage(userId: widget.userId),
-                        transitionDuration: Duration.zero,
-                        reverseTransitionDuration: Duration.zero,
-                      ),
-                    );
-                  },
+                    const SizedBox(height: 20),
+                  ],
                 ),
-              ),
-            ],
+                Positioned(
+                  top: 5,
+                  right: 0,
+                  child: IconButton(
+                    icon: const Icon(Icons.close, color: Colors.black),
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (context, animation1, animation2) =>
+                              SignupDBPage(userId: widget.userId),
+                          transitionDuration: Duration.zero,
+                          reverseTransitionDuration: Duration.zero,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
+  String _mapColorToDirectoryName(String color) {
+    switch (color) {
+      case '민트':
+        return 'mint';
+      case '화이트':
+        return 'white';
+      case '베이지':
+        return 'beige';
+      case '카키':
+        return 'khaki';
+      case '그레이':
+        return 'grey';
+      case '실버':
+        return 'silver';
+      case '스카이블루':
+        return 'skyblue';
+      case '브라운':
+        return 'brown';
+      case '핑크':
+        return 'pink';
+      case '블랙':
+        return 'black';
+      case '그린':
+        return 'green';
+      case '오렌지':
+        return 'orange';
+      case '블루':
+        return 'blue';
+      case '네이비':
+        return 'navy';
+      case '레드':
+        return 'red';
+      case '와인':
+        return 'wine';
+      case '퍼플':
+        return 'purple';
+      case '옐로우':
+        return 'yellow';
+      case '라벤더':
+        return 'lavender';
+      case '골드':
+        return 'gold';
+      default:
+        return 'unknown'; // 기본값
+    }
+  }
+
   Color _getColor(String color) {
     switch (color) {
       case '민트':
-        return Color(0xFF98FF98);
+        return const Color(0xFF98FF98);
       case '화이트':
         return Colors.white;
       case '베이지':
-        return Color(0xFFF5F5DC);
+        return const Color(0xFFF5F5DC);
       case '카키':
-        return Color(0xFFBDB76B);
+        return const Color(0xFFBDB76B);
       case '그레이':
         return Colors.grey;
       case '실버':
-        return Color(0xFFC0C0C0);
+        return const Color(0xFFC0C0C0);
       case '스카이블루':
-        return Color(0xFF87CEEB);
+        return const Color(0xFF87CEEB);
       case '브라운':
-        return Color(0xFFA52A2A);
+        return const Color(0xFFA52A2A);
       case '핑크':
         return Colors.pink;
       case '블랙':
@@ -423,19 +505,19 @@ class _TopsDetailPageState extends State<TopsDetailPage> {
       case '블루':
         return Colors.blue;
       case '네이비':
-        return Color(0xFF000080);
+        return const Color(0xFF000080);
       case '레드':
         return Colors.red;
       case '와인':
-        return Color(0xFF722F37);
+        return const Color(0xFF722F37);
       case '퍼플':
         return Colors.purple;
       case '옐로우':
         return Colors.yellow;
       case '라벤더':
-        return Color(0xFFE6E6FA);
+        return const Color(0xFFE6E6FA);
       case '골드':
-        return Color(0xFFFFD700);
+        return const Color(0xFFFFD700);
       default:
         return Colors.white;
     }
