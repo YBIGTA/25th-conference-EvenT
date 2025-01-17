@@ -28,6 +28,10 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>사진 라이브러리에 접근해 이미지를 업로드하기 위해 사용됩니다.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>카메라로 사진을 촬영해 업로드하기 위해 사용됩니다.</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

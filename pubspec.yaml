@@ -40,6 +40,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   flutter_dotenv: ^5.2.1
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:
@@ -115,6 +116,7 @@ flutter:
   # see https://flutter.dev/to/font-from-package
   assets:
     - .env
+    - assets/
     - assets/images/
     - assets/images/white/
     - assets/images/beige/
@@ -122,5 +124,7 @@ flutter:
     - assets/images/grey/
     - assets/images/red/
     - assets/images/skyblue/
+    - assets/images/green/
+    - assets/images/black/
     - assets/homepage_img.png
     - assets/icons/

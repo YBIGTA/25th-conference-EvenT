@@ -256,7 +256,7 @@ class _BottomsDetailPageState extends State<BottomsDetailPage> {
                                   ),
                                   const SizedBox(width: 10),
                                   Row(
-                                    children: ['크롭', '미디움', '롱']
+                                    children: ['크롭', '미디', '롱']
                                         .map(
                                           (length) => GestureDetector(
                                         onTap: () {

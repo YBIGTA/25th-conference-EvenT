@@ -34,12 +34,12 @@ Future<bool> sendDataToServer(Map<String, dynamic> data, String apiUrl) async {
   }
 }
 
-class TopsDetailPage extends StatefulWidget {
+class OutersDetailPage extends StatefulWidget {
   final String label; // 블록 이름
   final String imagePath; // 블록 이미지
   final String userId;
 
-  const TopsDetailPage({
+  const OutersDetailPage({
     Key? key,
     required this.label,
     required this.imagePath,
@@ -47,10 +47,10 @@ class TopsDetailPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _TopsDetailPageState createState() => _TopsDetailPageState();
+  _OutersDetailPageState createState() => _OutersDetailPageState();
 }
 
-class _TopsDetailPageState extends State<TopsDetailPage> {
+class _OutersDetailPageState extends State<OutersDetailPage> {
   String selectedColor = '화이트'; // 기본 선택 색상
   String selectedLength = ''; // 기본값은 선택하지 않은 상태
   String customName = '';
@@ -85,9 +85,13 @@ class _TopsDetailPageState extends State<TopsDetailPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
+        // ▼ 높이를 고정하면 overflow 발생 위험이 있으므로, 스크롤 가능하도록 변경 (필요 시)
+        //    필요 없다면 아래 SingleChildScrollView는 제거하셔도 됩니다.
         child: SingleChildScrollView(
           child: Container(
+            // width는 유지, height 고정은 제거하는 것을 권장합니다.
             width: 347,
+            // height: 420, // <- 제거 권장
             decoration: ShapeDecoration(
               color: Colors.white,
               shape: RoundedRectangleBorder(
@@ -252,7 +256,7 @@ class _TopsDetailPageState extends State<TopsDetailPage> {
                                   ),
                                   const SizedBox(width: 10),
                                   Row(
-                                    children: ['크롭', '노멀', '롱']
+                                    children: ['크롭', '미디움', '롱']
                                         .map(
                                           (length) => GestureDetector(
                                         onTap: () {
@@ -341,10 +345,10 @@ class _TopsDetailPageState extends State<TopsDetailPage> {
                       onPressed: () async {
                         final Map<String, dynamic> data = {
                           "userId": widget.userId,
-                          "fulls3url": '',
+                          "fulls3url": imagePath,
                           "categories": [
                             {
-                              "categoryName": "상의",
+                              "categoryName": "아우터",
                               "subcategories": [
                                 {
                                   "name": widget.label,

@@ -19,6 +19,9 @@ Future<Map<String, dynamic>> fetchInitialCards(
       Uri.parse(serverUrl_initial),
     );
 
+    print("Server Respon Status: ${response.statusCode}");
+    print("Server Response Body: ${response.body}");
+
     if (response.statusCode == 200) {
       print("-----fetchInitialCards()-----");
       final List<dynamic> data = json.decode(response.body);
@@ -31,11 +34,14 @@ Future<Map<String, dynamic>> fetchInitialCards(
         final clothesId = item['item']['clothesId'];
         clothesIds.add(clothesId);
       }
+      print("Initial clothesId: $clothesIds");
 
       // SwipeItem 리스트 생성
       final items = data.map((item) {
-        final s3Url = item['item']['s3Url'];
+        final s3Url = item['item']['fulls3url'];
+        final vector = item['item']["vector"];
         // final clothesId = item['item']['clothesId'];
+        // print("initial s3url : $s3Url");
         return SwipeItem(
           content: s3Url,
 
@@ -43,7 +49,7 @@ Future<Map<String, dynamic>> fetchInitialCards(
           likeAction: () async {
             final currentClothesId = await handleSwipeCallback();
             // POST 요청
-            await sendLikeAction(userId, currentClothesId);
+            await sendLikeAction(userId, currentClothesId, vector);
             // 스낵바
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -98,14 +104,14 @@ Future<Map<String, dynamic>> fetchInitialCards(
 }
 
 // 좋아요 시 POST 요청
-Future<void> sendLikeAction(String userId, int clothesId) async {
+Future<void> sendLikeAction(String userId, int clothesId, vector) async {
   print('------sendLikeAction------');
 
   final String serverUrl_like = createUrl('pinecone/action/like');
 
   final url = Uri.parse(serverUrl_like);
   final headers = {'Content-Type': 'application/json'};
-  final body = json.encode({'userId': userId, 'clothesId' : clothesId});
+  final body = json.encode({'userId': userId, 'clothesId' : clothesId, 'vector' : vector});
   print("요청 바디 : $body");
 
   try {
@@ -182,7 +188,8 @@ class _SwipeCardViewState extends State<SwipeCardView> {
     setState(() {
       final fetchedItems = result['swipeItems'] as List<SwipeItem>;
       final fetchedClothesIds = result["clothesIds"] as List<int>;
-
+      // print("Fetched SwipeItems: $fetchedItems");
+      // print("Fetched ClothesIds: $fetchedClothesIds");
       // 가져온 데이터 추가
       swipeItems.addAll(fetchedItems);
       clothesId.addAll(fetchedClothesIds);

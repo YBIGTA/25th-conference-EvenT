@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'tops_details.dart';
 import 'bottoms_details.dart';
+import 'outers_details.dart';
 import '../../widgets/font.dart';
 import '../../widgets/button.dart';
 import '../../home_page.dart';
@@ -24,8 +25,8 @@ class SignupDBPage extends StatelessWidget {
 
   // 하의 블록 데이터
   static const List<Map<String, String>> bottomsItems = [
-    {'label': '반바지', 'imagePath': 'assets/images/short_pants.png'},
-    {'label': '긴바지', 'imagePath': 'assets/images/long_pants.png'},
+    {'label': '숏팬츠', 'imagePath': 'assets/images/short_pants.png'},
+    {'label': '팬츠', 'imagePath': 'assets/images/long_pants.png'},
     {'label': '스커트', 'imagePath': 'assets/images/skirts.png'}
   ];
 
@@ -191,7 +192,7 @@ class SignupDBPage extends StatelessWidget {
                       context,
                       PageRouteBuilder(
                         pageBuilder: (context, animation1, animation2) =>
-                            BottomsDetailPage(
+                            OutersDetailPage(
                               label: item['label']!,
                               imagePath: item['imagePath']!,
                               userId: userId,

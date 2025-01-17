@@ -513,25 +513,26 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       const SizedBox(height: 20),
                       // 이건 서버 안열었을 때
-                      ElevatedButton(
-                        onPressed: () {
-                          // Navigator를 사용하여 signup_db 페이지로 이동
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => SignupDBPage(userId: idController.text)),
-                          );
-                        },
-                        style: AppButtonStyles.otherButton(),
-                        child: const Text(
-                          '서버x버튼',
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                      ),
-
+                      // ElevatedButton(
+                      //   onPressed: () {
+                      //     print("버튼클릭");
+                      //     // Navigator를 사용하여 signup_db 페이지로 이동
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(builder: (context) => SignupDBPage(userId: idController.text)),
+                      //     );
+                      //   },
+                      //   style: AppButtonStyles.otherButton(),
+                      //   child: const Text(
+                      //     '서버x버튼',
+                      //     style: TextStyle(
+                      //       fontSize: 15,
+                      //       color: Colors.white,
+                      //       fontWeight: FontWeight.w900,
+                      //     ),
+                      //   ),
+                      // ),
+                      //
 
                     ],
                   ),

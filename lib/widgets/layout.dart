@@ -5,6 +5,7 @@ import '../home_screen/style_page.dart';
 import '../home_screen/save_page.dart';
 import '../home_screen/add_page.dart';
 import '../home_screen/closet_page.dart';
+import '../home_screen/add_page.dart';
 
 class CommonLayout extends StatefulWidget {
 
@@ -25,7 +26,7 @@ class _CommonLayoutState extends State<CommonLayout> {
 
     // 페이지 리스트 초기화하면서 userId 전달
     _pages = [
-      Center(child: Text('등록 페이지')), // userId 전달
+      AddPage(userId: widget.userId), // userId 전달
       StylePage(userId: widget.userId), // userId 전달
       SavePage(userId: widget.userId), // userId 전달
       ClosetPage(userId: widget.userId), // userId 전달
@@ -52,6 +53,7 @@ class _CommonLayoutState extends State<CommonLayout> {
 
   AppBar _buildAppBar() {
     return AppBar(
+      scrolledUnderElevation: 0,
       backgroundColor: Colors.white,
       elevation: 0,
       title: Padding(
